@@ -57,6 +57,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.AJAX.Cnds.OnComplete,
 		C3.Plugins.Arr.Acts.JSONLoad,
 		C3.Plugins.AJAX.Exps.LastData,
+		C3.Plugins.System.Acts.SetBoolVar,
 		C3.Plugins.Text.Acts.Destroy,
 		C3.Plugins.Sprite.Acts.Destroy,
 		C3.Plugins.Sprite.Cnds.IsOnScreen,
@@ -69,7 +70,6 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.System.Acts.SubVar,
 		C3.Plugins.System.Acts.Wait,
 		C3.Plugins.System.Acts.AddVar,
-		C3.Plugins.System.Acts.SetBoolVar,
 		C3.Plugins.Text.Cnds.CompareY,
 		C3.Plugins.Text.Cnds.PickDistance,
 		C3.Plugins.Text.Exps.X,
@@ -216,6 +216,7 @@ self.C3_JsPropNameTable = [
 	{BattleReward: 0},
 	{Touched: 0},
 	{Happin_baff_count: 0},
+	{EventPush: 0},
 	{EnemyHPmax: 0},
 	{EnemyHP: 0}
 ];
