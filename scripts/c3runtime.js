@@ -1164,6 +1164,16 @@ const C3=self.C3,_1_SHL_53=9007199254740992;let splitstate=BigInt(0),s=[BigInt(0
 {const e=self.C3;e.Plugins.TiledBg=class extends e.SDKPluginBase{constructor(e){super(e)}Release(){super.Release()}}}{const t=self.C3;function WrapModeToStr(e){switch(e){case 0:return"clamp-to-edge";case 1:return"repeat";case 2:return"mirror-repeat"}return"repeat"}t.Plugins.TiledBg.Type=class extends t.SDKTypeBase{constructor(e,t){super(e),this._wrapX="repeat",this._wrapY="repeat",t&&(this._wrapX=WrapModeToStr(t[0]),this._wrapY=WrapModeToStr(t[1]))}Release(){super.Release()}OnCreate(){this.GetImageInfo().LoadAsset(this._runtime)}LoadTextures(e){return this.GetImageInfo().LoadStaticTexture(e,{sampling:this._runtime.GetSampling(),wrapX:this._wrapX,wrapY:this._wrapY})}ReleaseTextures(){this.GetImageInfo().ReleaseTexture()}GetWrapModeX(){return this._wrapX}GetWrapModeY(){return this._wrapY}}}{const i=self.C3,a=self.C3X,n=0,s=4,l=5,r=6,g=7,m=8,d=9,h=10,o=11,_=12,u=13,R=14,f=i.New(i.Rect),S=i.New(i.Quad),I=i.New(i.Rect),c=i.New(i.Quad);i.Plugins.TiledBg.Instance=class extends i.SDKWorldInstanceBase{constructor(e,t){super(e),this._imageOffsetX=0,this._imageOffsetY=0,this._imageScaleX=1,this._imageScaleY=1,this._imageAngle=0,this._enableTileRandomization=!1,this._tileXRandom=0,this._tileYRandom=0,this._tileAngleRandom=0,this._tileBlendMarginX=0,this._tileBlendMarginY=0,this._ownImageInfo=null,t&&(this.GetWorldInfo().SetVisible(!!t[n]),this._imageOffsetX=t[s],this._imageOffsetY=t[l],this._imageScaleX=t[r],this._imageScaleY=t[g],this._imageAngle=i.toRadians(t[m]),this._enableTileRandomization=!!t[d],this._tileXRandom=t[h],this._tileYRandom=t[o],this._tileAngleRandom=t[_],this._tileBlendMarginX=t[u],this._tileBlendMarginY=t[R])}Release(){this._ReleaseOwnImage(),super.Release()}_ReleaseOwnImage(){this._ownImageInfo&&(this._ownImageInfo.Release(),this._ownImageInfo=null)}CalculateTextureCoordsFor3DFace(e,t,i){const a=this.GetCurrentImageInfo(),n=a.GetWidth(),s=a.GetHeight(),l=this._imageOffsetX/n,r=this._imageOffsetY/s,g=this._imageAngle;I.set(0,0,e/(n*this._imageScaleX),t/(s*this._imageScaleY)),I.offset(-l,-r),0===g?i.setFromRect(I):i.setFromRotatedRect(I,-g)}SetTilingShaderProgram(e,t=!0){if(this._enableTileRandomization){const t=this.GetCurrentImageInfo();e.SetTileRandomizationMode(),e.SetTileRandomizationInfo(t.GetWidth()*this._imageScaleX,t.GetHeight()*this._imageScaleY,this._tileXRandom,this._tileYRandom,this._tileAngleRandom,this._tileBlendMarginX,this._tileBlendMarginY)}else t&&e.SetTextureFillMode()}Draw(e){const t=this.GetCurrentImageInfo(),i=t.GetTexture();if(null===i)return;this.SetTilingShaderProgram(e),e.SetTexture(i);const a=t.GetWidth(),n=t.GetHeight(),s=this._imageOffsetX/a,l=this._imageOffsetY/n,r=this.GetWorldInfo();I.set(0,0,r.GetWidth()/(a*this._imageScaleX),r.GetHeight()/(n*this._imageScaleY)),I.offset(-s,-l),r.HasMesh()?this._DrawMesh(r,e):this._DrawStandard(r,e)}_DrawStandard(e,t){let i=e.GetBoundingQuad();this._runtime.IsPixelRoundingEnabled()&&(i=e.PixelRoundQuad(i)),0===this._imageAngle?t.Quad3(i,I):(c.setFromRotatedRect(I,-this._imageAngle),t.Quad4(i,c))}_DrawMesh(e,t){const i=e.GetTransformedMesh();if(e.IsMeshChanged()){e.CalculateBbox(f,S,!1);let t=S;this._runtime.IsPixelRoundingEnabled()&&(t=e.PixelRoundQuad(t));let a=I;0!==this._imageAngle&&(c.setFromRotatedRect(I,-this._imageAngle),a=c),i.CalculateTransformedMesh(e.GetSourceMesh(),t,a),e.SetMeshChanged(!1)}i.Draw(t)}GetCurrentImageInfo(){return this._ownImageInfo||this._objectClass.GetImageInfo()}IsOriginalSizeKnown(){return!0}GetTexture(){return this.GetCurrentImageInfo().GetTexture()}_SetMeshChanged(){this.GetWorldInfo().SetMeshChanged(!0)}_SetImageOffsetX(e){this._imageOffsetX!==e&&(this._imageOffsetX=e,this._runtime.UpdateRender(),this._SetMeshChanged())}_GetImageOffsetX(){return this._imageOffsetX}_SetImageOffsetY(e){this._imageOffsetY!==e&&(this._imageOffsetY=e,this._runtime.UpdateRender(),this._SetMeshChanged())}_GetImageOffsetY(){return this._imageOffsetY}_SetImageScaleX(e){this._imageScaleX!==e&&(this._imageScaleX=e,this._runtime.UpdateRender(),this._SetMeshChanged())}_GetImageScaleX(){return this._imageScaleX}_SetImageScaleY(e){this._imageScaleY!==e&&(this._imageScaleY=e,this._runtime.UpdateRender(),this._SetMeshChanged())}_GetImageScaleY(){return this._imageScaleY}_SetImageAngle(e){this._imageAngle!==e&&(this._imageAngle=e,this._runtime.UpdateRender(),this._SetMeshChanged())}_GetImageAngle(){return this._imageAngle}_SetTileRandomizationEnabled(e){e=!!e,this._enableTileRandomization!==e&&(this._enableTileRandomization=e,this._runtime.UpdateRender())}_IsTileRandomizationEnabled(){return this._enableTileRandomization}_SetTileXRandom(e){this._tileXRandom!==e&&(this._tileXRandom=e,this._IsTileRandomizationEnabled()&&this._runtime.UpdateRender())}_GetTileXRandom(){return this._tileXRandom}_SetTileYRandom(e){this._tileYRandom!==e&&(this._tileYRandom=e,this._IsTileRandomizationEnabled()&&this._runtime.UpdateRender())}_GetTileYRandom(){return this._tileYRandom}_SetTileAngleRandom(e){this._tileAngleRandom!==e&&(this._tileAngleRandom=e,this._IsTileRandomizationEnabled()&&this._runtime.UpdateRender())}_GetTileAngleRandom(){return this._tileAngleRandom}_SetTileBlendMarginX(e){this._tileBlendMarginX!==e&&(this._tileBlendMarginX=e,this._IsTileRandomizationEnabled()&&this._runtime.UpdateRender())}_GetTileBlendMarginX(){return this._tileBlendMarginX}_SetTileBlendMarginY(e){this._tileBlendMarginY!==e&&(this._tileBlendMarginY=e,this._IsTileRandomizationEnabled()&&this._runtime.UpdateRender())}_GetTileBlendMarginY(){return this._tileBlendMarginY}SaveToJson(){const e={};return 0!==this._imageOffsetX&&(e["iox"]=this._imageOffsetX),0!==this._imageOffsetY&&(e["ioy"]=this._imageOffsetY),1!==this._imageScaleX&&(e["isx"]=this._imageScaleX),1!==this._imageScaleY&&(e["isy"]=this._imageScaleY),0!==this._imageAngle&&(e["ia"]=this._imageAngle),this._enableTileRandomization&&(e["tr"]=!0),1!==this._tileXRandom&&(e["trx"]=this._tileXRandom),1!==this._tileYRandom&&(e["try"]=this._tileYRandom),1!==this._tileAngleRandom&&(e["tra"]=this._tileAngleRandom),.1!==this._tileBlendMarginX&&(e["trbmx"]=this._tileBlendMarginX),.1!==this._tileBlendMarginY&&(e["trbmy"]=this._tileBlendMarginY),e}LoadFromJson(e){this._imageOffsetX=e["iox"]||0,this._imageOffsetY=e["ioy"]||0,this._imageScaleX=e.hasOwnProperty("isx")?e["isx"]:1,this._imageScaleY=e.hasOwnProperty("isy")?e["isy"]:1,this._imageAngle=e["ia"]||0,this._enableTileRandomization=!!e["tr"],this._tileXRandom=e.hasOwnProperty("trx")?e["trx"]:1,this._tileYRandom=e.hasOwnProperty("try")?e["try"]:1,this._tileAngleRandom=e.hasOwnProperty("tra")?e["tra"]:1,this._tileBlendMarginX=e.hasOwnProperty("trbmx")?e["trbmx"]:.1,this._tileBlendMarginY=e.hasOwnProperty("trbmy")?e["trbmy"]:.1}GetDebuggerProperties(){const e="plugins.tiledbg.properties";return[{title:e+".image-transform.name",properties:[{name:e+".image-offset-x.name",value:this._GetImageOffsetX(),onedit:e=>this._SetImageOffsetX(e)},{name:e+".image-offset-y.name",value:this._GetImageOffsetY(),onedit:e=>this._SetImageOffsetY(e)},{name:e+".image-scale-x.name",value:100*this._GetImageScaleX(),onedit:e=>this._SetImageScaleX(e/100)},{name:e+".image-scale-y.name",value:100*this._GetImageScaleY(),onedit:e=>this._SetImageScaleY(e/100)},{name:e+".image-angle.name",value:i.toDegrees(this._GetImageAngle()),onedit:e=>this._SetImageAngle(i.toRadians(e))}]},{title:e+".tile-randomization.name",properties:[{name:e+".enable-tile-randomization.name",value:this._IsTileRandomizationEnabled(),onedit:e=>this._SetTileRandomizationEnabled(e)},{name:e+".x-random.name",value:100*this._GetTileXRandom(),onedit:e=>this._SetTileXRandom(e/100)},{name:e+".y-random.name",value:100*this._GetTileYRandom(),onedit:e=>this._SetTileYRandom(e/100)},{name:e+".angle-random.name",value:100*this._GetTileAngleRandom(),onedit:e=>this._SetTileAngleRandom(e/100)},{name:e+".blend-margin-x.name",value:100*this._GetTileBlendMarginX(),onedit:e=>this._SetTileBlendMarginX(e/100)},{name:e+".blend-margin-y.name",value:100*this._GetTileBlendMarginY(),onedit:e=>this._SetTileBlendMarginY(e/100)}]}]}GetPropertyValueByIndex(e){switch(e){case s:return this._GetImageOffsetX();case l:return this._GetImageOffsetY();case r:return this._GetImageScaleX();case g:return this._GetImageScaleY();case m:return this._GetImageAngle();case d:return this._IsTileRandomizationEnabled();case h:return this._GetTileXRandom();case o:return this._GetTileYRandom();case _:return this._GetTileAngleRandom();case u:return this._GetTileBlendMarginX();case R:return this._GetTileBlendMarginY()}}SetPropertyValueByIndex(e,t){switch(e){case s:this._SetImageOffsetX(t);break;case l:this._SetImageOffsetY(t);break;case r:this._SetImageScaleX(t);break;case g:this._SetImageScaleY(t);break;case m:this._SetImageAngle(t);break;case d:this._SetTileRandomizationEnabled(!!t);break;case h:this._SetTileXRandom(t);break;case o:this._SetTileYRandom(t);break;case _:this._SetTileAngleRandom(t);break;case u:this._SetTileBlendMarginX(t);break;case R:this._SetTileBlendMarginY(t)}}GetScriptInterfaceClass(){return self.ITiledBackgroundInstance}};const T=new WeakMap;self.ITiledBackgroundInstance=class extends self.IWorldInstance{constructor(){super(),T.set(this,self.IInstance._GetInitInst().GetSdkInstance())}set imageOffsetX(e){a.RequireFiniteNumber(e),T.get(this)._SetImageOffsetX(e)}get imageOffsetX(){return T.get(this)._GetImageOffsetX()}set imageOffsetY(e){a.RequireFiniteNumber(e),T.get(this)._SetImageOffsetY(e)}get imageOffsetY(){return T.get(this)._GetImageOffsetY()}setImageOffset(e,t){a.RequireFiniteNumber(e),a.RequireFiniteNumber(t);const i=T.get(this);i._SetImageOffsetX(e),i._SetImageOffsetY(t)}getImageOffset(){const e=T.get(this);return[e._GetImageOffsetX(),e._GetImageOffsetY()]}set imageScaleX(e){a.RequireFiniteNumber(e),T.get(this)._SetImageScaleX(e)}get imageScaleX(){return T.get(this)._GetImageScaleX()}set imageScaleY(e){a.RequireFiniteNumber(e),T.get(this)._SetImageScaleY(e)}get imageScaleY(){return T.get(this)._GetImageScaleY()}setImageScale(e,t){a.RequireFiniteNumber(e),a.RequireFiniteNumber(t);const i=T.get(this);i._SetImageScaleX(e),i._SetImageScaleY(t)}getImageScale(){const e=T.get(this);return[e._GetImageScaleX(),e._GetImageScaleY()]}set imageAngle(e){a.RequireFiniteNumber(e),T.get(this)._SetImageAngle(e)}get imageAngle(){return T.get(this)._GetImageAngle()}set imageAngleDegrees(e){a.RequireFiniteNumber(e),T.get(this)._SetImageAngle(i.toRadians(e))}get imageAngleDegrees(){return i.toDegrees(T.get(this)._GetImageAngle())}get imageWidth(){return T.get(this).GetCurrentImageInfo().GetWidth()}get imageHeight(){return T.get(this).GetCurrentImageInfo().GetHeight()}getImageSize(){const e=T.get(this).GetCurrentImageInfo();return[e.GetWidth(),e.GetHeight()]}set enableTileRandomization(e){T.get(this)._SetTileRandomizationEnabled(!!e)}get enableTileRandomization(){return T.get(this)._IsTileRandomizationEnabled()}set tileXRandom(e){a.RequireFiniteNumber(e),T.get(this)._SetTileXRandom(e)}get tileXRandom(){return T.get(this)._GetTileXRandom()}set tileYRandom(e){a.RequireFiniteNumber(e),T.get(this)._SetTileYRandom(e)}get tileYRandom(){return T.get(this)._GetTileYRandom()}setTileRandom(e,t){a.RequireFiniteNumber(e),a.RequireFiniteNumber(t);const i=T.get(this);i._SetTileXRandom(e),i._SetTileYRandom(t)}getTileRandom(){const e=T.get(this);return[e._GetTileXRandom(),e._GetTileYRandom()]}set tileAngleRandom(e){a.RequireFiniteNumber(e),T.get(this)._SetTileAngleRandom(e)}get tileAngleRandom(){return T.get(this)._GetTileAngleRandom()}set tileBlendMarginX(e){a.RequireFiniteNumber(e),T.get(this)._SetTileBlendMarginX(e)}get tileBlendMarginX(){return T.get(this)._GetTileBlendMarginX()}set tileBlendMarginY(e){a.RequireFiniteNumber(e),T.get(this)._SetTileBlendMarginY(e)}get tileBlendMarginY(){return T.get(this)._GetTileBlendMarginY()}setTileBlendMargin(e,t){a.RequireFiniteNumber(e),a.RequireFiniteNumber(t);const i=T.get(this);i._SetTileBlendMarginX(e),i._SetTileBlendMarginY(t)}getTileBlendMargin(){const e=T.get(this);return[e._GetTileBlendMarginX(),e._GetTileBlendMarginY()]}async replaceImage(e){a.RequireInstanceOf(e,Blob);const t=T.get(this),n=t.GetRuntime(),s=i.New(i.ImageInfo);s.LoadDynamicBlobAsset(n,e),await s.LoadStaticTexture(n.GetRenderer(),{sampling:n.GetSampling(),wrapX:t.GetSdkType().GetWrapModeX(),wrapY:t.GetSdkType().GetWrapModeY()}),t.WasReleased()?s.Release():(t._ReleaseOwnImage(),t._ownImageInfo=s,n.UpdateRender())}}}self.C3.Plugins.TiledBg.Cnds={OnURLLoaded:()=>!0,OnURLFailed:()=>!0,IsTileRandomizationEnabled(){return this._IsTileRandomizationEnabled()}};{const G=self.C3;G.Plugins.TiledBg.Acts={SetImageOffsetX(e){this._SetImageOffsetX(e)},SetImageOffsetY(e){this._SetImageOffsetY(e)},SetImageScaleX(e){this._SetImageScaleX(e/100)},SetImageScaleY(e){this._SetImageScaleY(e/100)},SetImageAngle(e){this._SetImageAngle(G.toRadians(e))},SetTileRandomizationEnabled(e){this._SetTileRandomizationEnabled(e)},SetTilePosRandom(e,t){this._SetTileXRandom(e/100),this._SetTileYRandom(t/100)},SetTileAngleRandom(e){this._SetTileAngleRandom(e/100)},SetTileBlendMargin(e,t){this._SetTileBlendMarginX(e/100),this._SetTileBlendMarginY(t/100)},SetEffect(e){this.GetWorldInfo().SetBlendMode(e),this._runtime.UpdateRender()},async LoadURL(e,t){if(this._ownImageInfo&&this._ownImageInfo.GetURL()===e)return;const i=this._runtime,a=G.New(G.ImageInfo);try{if(await a.LoadDynamicAsset(i,e),!a.IsLoaded())throw new Error("image failed to load");if(this.WasReleased())return a.Release(),null;if(!await a.LoadStaticTexture(i.GetRenderer(),{sampling:i.GetSampling(),wrapX:this.GetSdkType().GetWrapModeX(),wrapY:this.GetSdkType().GetWrapModeY()}))return}catch(e){return console.error("Load image from URL failed: ",e),void(this.WasReleased()||this.Trigger(G.Plugins.TiledBg.Cnds.OnURLFailed))}this.WasReleased()?a.Release():(this._ReleaseOwnImage(),this._ownImageInfo=a,i.UpdateRender(),await this.TriggerAsync(G.Plugins.TiledBg.Cnds.OnURLLoaded))}}}{const X=self.C3;X.Plugins.TiledBg.Exps={ImageWidth(){return this.GetCurrentImageInfo().GetWidth()},ImageHeight(){return this.GetCurrentImageInfo().GetHeight()},ImageOffsetX(){return this._imageOffsetX},ImageOffsetY(){return this._imageOffsetY},ImageScaleX(){return 100*this._imageScaleX},ImageScaleY(){return 100*this._imageScaleY},ImageAngle(){return X.toDegrees(this._imageAngle)},TileXRandom(){return 100*this._GetTileXRandom()},TileYRandom(){return 100*this._GetTileYRandom()},TileAngleRandom(){return 100*this._GetTileAngleRandom()},TileBlendMarginX(){return 100*this._GetTileBlendMarginX()},TileBlendMarginY(){return 100*this._GetTileBlendMarginY()}}}
 }
 
+// scripts/plugins/TextBox/c3runtime/runtime.js
+{
+{const t=self.C3,e="text-input";t.Plugins.TextBox=class extends t.SDKDOMPluginBase{constructor(t){super(t,e),this.AddElementMessageHandler("click",((t,e)=>t._OnClick(e))),this.AddElementMessageHandler("dblclick",((t,e)=>t._OnDoubleClick(e))),this.AddElementMessageHandler("change",((t,e)=>t._OnChange(e)))}Release(){super.Release()}}}{const t=self.C3;t.Plugins.TextBox.Type=class extends t.SDKTypeBase{constructor(t){super(t)}Release(){super.Release()}OnCreate(){}}}{const t=self.C3,e=self.C3X,s=0,i=1,l=2,n=3,a=4,h=5,r=6,_=7,o=8,d=9,c=10,p="text-input",x=["text","password","email","number","tel","url","textarea","search"];t.Plugins.TextBox.Instance=class extends t.SDKDOMInstanceBase{constructor(t,e){super(t,p),this._text="",this._placeholder="",this._title="",this._isEnabled=!0,this._isReadOnly=!1,this._spellCheck=!1,this._type="text",this._autoFontSize=!0,this._maxLength=-1,this._id="",this._className="",e&&(this._text=e[s],this._placeholder=e[i],this._title=e[l],this.GetWorldInfo().SetVisible(e[n]),this._isEnabled=e[a],this._isReadOnly=e[h],this._spellCheck=e[r],this._type=x[e[_]],this._autoFontSize=e[o],this._id=e[d],this._className=e[c]),this.CreateElement({"type":this._type,"id":this._id,"className":this._className})}Release(){super.Release()}GetElementState(){return{"text":this._text,"placeholder":this._placeholder,"title":this._title,"isEnabled":this._isEnabled,"isReadOnly":this._isReadOnly,"spellCheck":this._spellCheck,"maxLength":this._maxLength}}async _OnClick(e){this.DispatchScriptEvent("click",!0),await this.TriggerAsync(t.Plugins.TextBox.Cnds.OnClicked)}async _OnDoubleClick(e){this.DispatchScriptEvent("dblclick",!0),await this.TriggerAsync(t.Plugins.TextBox.Cnds.OnDoubleClicked)}async _OnChange(e){this._text=e["text"],this.DispatchScriptEvent("change",!0),await this.TriggerAsync(t.Plugins.TextBox.Cnds.OnTextChanged)}_SetText(t){this._text!==t&&(this._text=t,this.UpdateElementState())}_GetText(){return this._text}_SetPlaceholder(t){this._placeholder!==t&&(this._placeholder=t,this.UpdateElementState())}_GetPlaceholder(){return this._placeholder}_SetTooltip(t){this._title!==t&&(this._title=t,this.UpdateElementState())}_GetTooltip(){return this._title}_SetEnabled(t){t=!!t,this._isEnabled!==t&&(this._isEnabled=t,this.UpdateElementState())}_IsEnabled(){return this._isEnabled}_SetReadOnly(t){t=!!t,this._isReadOnly!==t&&(this._isReadOnly=t,this.UpdateElementState())}_IsReadOnly(){return this._isReadOnly}_SetMaxLength(t){t=Math.max(+t,-1),this._maxLength!==t&&(this._maxLength=t,this.UpdateElementState())}_GetMaxLength(){return this._maxLength}_ScrollToBottom(){Promise.resolve().then((()=>this.PostToDOMElement("scroll-to-bottom")))}Draw(t){}SaveToJson(){return{"t":this._text,"p":this._placeholder,"ti":this._title,"e":this._isEnabled,"r":this._isReadOnly,"sp":this._spellCheck,"ml":this._maxLength,"type":this._type,"id":this._id}}LoadFromJson(t){this._text=t["t"],this._placeholder=t["p"],this._title=t["ti"],this._isEnabled=t["e"],this._isReadOnly=t["r"],this._spellCheck=t["sp"],this._maxLength=t.hasOwnProperty("ml")?t["ml"]:-1,this._type=t["type"],this._id=t["id"],this.UpdateElementState()}GetPropertyValueByIndex(t){switch(t){case s:return this._text;case i:return this._placeholder;case l:return this._title;case a:return this._isEnabled;case h:return this._isReadOnly;case r:return this._spellCheck;case o:return this._autoFontSize}}SetPropertyValueByIndex(t,e){switch(t){case s:if(this._text===e)return;this._text=e,this.UpdateElementState();break;case i:if(this._placeholder===e)return;this._placeholder=e,this.UpdateElementState();break;case l:if(this._title===e)return;this._title=e,this.UpdateElementState();break;case a:if(this._isEnabled===!!e)return;this._isEnabled=!!e,this.UpdateElementState();break;case h:if(this._isReadOnly===!!e)return;this._isReadOnly=!!e,this.UpdateElementState();break;case r:if(this._spellCheck===!!e)return;this._spellCheck=!!e,this.UpdateElementState();break;case o:this._autoFontSize=!!e}}GetDebuggerProperties(){const e=t.Plugins.TextBox.Acts,s="plugins.textbox";return[{title:s+".name",properties:[{name:s+".properties.text.name",value:this._text,onedit:t=>this.CallAction(e.SetText,t)},{name:s+".properties.enabled.name",value:this._isEnabled,onedit:t=>this.CallAction(e.SetEnabled,t)},{name:s+".properties.read-only.name",value:this._isReadOnly,onedit:t=>this.CallAction(e.SetReadOnly,t)}]}]}GetScriptInterfaceClass(){return self.ITextInputInstance}};const u=new WeakMap;self.ITextInputInstance=class extends self.IDOMInstance{constructor(){super(),u.set(this,self.IInstance._GetInitInst().GetSdkInstance())}set text(t){e.RequireString(t),u.get(this)._SetText(t)}get text(){return u.get(this)._GetText()}set placeholder(t){e.RequireString(t),u.get(this)._SetPlaceholder(t)}get placeholder(){return u.get(this)._GetPlaceholder()}set tooltip(t){e.RequireString(t),u.get(this)._SetTooltip(t)}get tooltip(){return u.get(this)._GetTooltip()}set isEnabled(t){u.get(this)._SetEnabled(t)}get isEnabled(){return u.get(this)._IsEnabled()}set isReadOnly(t){u.get(this)._SetReadOnly(t)}get isReadOnly(){return u.get(this)._IsReadOnly()}set maxLength(t){e.RequireFiniteNumber(t),u.get(this)._SetMaxLength(t)}get maxLength(){return u.get(this)._GetMaxLength()}scrollToBottom(){u.get(this)._ScrollToBottom()}}}{const t=self.C3;t.Plugins.TextBox.Cnds={CompareText(e,s){return 0===s?t.equalsNoCase(this._text,e):this._text===e},OnTextChanged:()=>!0,OnClicked:()=>!0,OnDoubleClicked:()=>!0}}self.C3.Plugins.TextBox.Acts={SetText(t){this._SetText(t.toString())},AppendText(t){""!==t&&this._SetText(this._GetText()+t)},SetPlaceholder(t){this._SetPlaceholder(t)},SetTooltip(t){this._SetTooltip(t)},SetReadOnly(t){this._SetReadOnly(0===t)},ScrollToBottom(){this._ScrollToBottom()},SetMaxLength(t){this._SetMaxLength(t)}};self.C3.Plugins.TextBox.Exps={Text(){return this._GetText()},MaxLength(){return this._GetMaxLength()}};
+}
+
+// scripts/plugins/Button/c3runtime/runtime.js
+{
+{const e=self.C3,t="button";e.Plugins.Button=class extends e.SDKDOMPluginBase{constructor(e){super(e,t),this.AddElementMessageHandler("click",((e,t)=>e._OnClick(t)))}Release(){super.Release()}}}{const e=self.C3;e.Plugins.Button.Type=class extends e.SDKTypeBase{constructor(e){super(e)}Release(){super.Release()}OnCreate(){}}}{const e=self.C3,t=self.C3X,s=0,i=1,n=2,h=3,a=4,l=5,c=6,r=7,_=8,d="button";e.Plugins.Button.Instance=class extends e.SDKDOMInstanceBase{constructor(e,t){super(e,d),this._text="OK",this._isCheckbox=!1,this._isChecked=!1,this._title="",this._id="",this._className="",this._isEnabled=!0,this._autoFontSize=!0,t&&(this._isCheckbox=1===t[s],this._text=t[i],this._title=t[n],this.GetWorldInfo().SetVisible(t[h]),this._isEnabled=t[a],this._autoFontSize=t[l],this._isChecked=t[c],this._id=t[r],this._className=t[_]),this.CreateElement({"id":this._id,"className":this._className})}Release(){super.Release()}GetElementState(){return{"text":this._text,"isCheckbox":this._isCheckbox,"isChecked":this._isChecked,"title":this._title,"isVisible":this.GetWorldInfo().IsVisible(),"isEnabled":this._isEnabled}}async _OnClick(t){this._isChecked=t["isChecked"],this.DispatchScriptEvent("click",!0),await this.TriggerAsync(e.Plugins.Button.Cnds.OnClicked)}_SetText(e){this._text!==e&&(this._text=e,this.UpdateElementState())}_GetText(){return this._text}_SetTooltip(e){this._title!==e&&(this._title=e,this.UpdateElementState())}_GetTooltip(){return this._title}_SetEnabled(e){e=!!e,this._isEnabled!==e&&(this._isEnabled=e,this.UpdateElementState())}_IsEnabled(){return this._isEnabled}_SetChecked(e){this._isCheckbox&&(e=!!e,this._isChecked!==e&&(this._isChecked=e,this.UpdateElementState()))}_IsChecked(){return this._isChecked}Draw(e){}SaveToJson(){return{"text":this._text,"checked":this._isChecked,"title":this._title,"enabled":this._isEnabled}}LoadFromJson(e){this._text=e["text"],this._isChecked=e["checked"],this._title=e["title"],this._isEnabled=e["enabled"],this.UpdateElementState()}GetPropertyValueByIndex(e){switch(e){case i:return this._GetText();case n:return this._GetTooltip();case a:return this._IsEnabled();case l:return this._autoFontSize;case c:return this._IsChecked()}}SetPropertyValueByIndex(e,t){switch(e){case i:this._SetText(t);break;case n:this._SetTooltip(t);break;case a:this._SetEnabled(!!t);break;case l:this._autoFontSize=!!t;break;case c:this._SetChecked(!!t)}}GetDebuggerProperties(){const e="plugins.button";return[{title:e+".name",properties:[{name:e+".properties.text.name",value:this._GetText(),onedit:e=>this._SetText(e)},{name:e+".properties.enabled.name",value:this._IsEnabled(),onedit:e=>this._SetEnabled(e)},{name:e+".properties.checked.name",value:this._IsChecked(),onedit:e=>this._SetChecked(e)}]}]}GetScriptInterfaceClass(){return self.IButtonInstance}};const o=new WeakMap;self.IButtonInstance=class extends self.IDOMInstance{constructor(){super(),o.set(this,self.IInstance._GetInitInst().GetSdkInstance())}set text(e){t.RequireString(e),o.get(this)._SetText(e)}get text(){return o.get(this)._GetText()}set tooltip(e){t.RequireString(e),o.get(this)._SetTooltip(e)}get tooltip(){return o.get(this)._GetTooltip()}set isEnabled(e){o.get(this)._SetEnabled(e)}get isEnabled(){return o.get(this)._IsEnabled()}set isChecked(e){o.get(this)._SetChecked(e)}get isChecked(){return o.get(this)._IsChecked()}}}{const e=self.C3;e.Plugins.Button.Cnds={OnClicked:()=>!0,IsChecked(){return this._isChecked},CompareText(t,s){return s?this._text===t:e.equalsNoCase(this._text,t)}}}self.C3.Plugins.Button.Acts={SetText(e){this._SetText(e)},SetTooltip(e){this._SetTooltip(e)},SetChecked(e){this._SetChecked(0!==e)},ToggleChecked(){this._isCheckbox&&(this._isChecked=!this._isChecked,this.UpdateElementState())}};self.C3.Plugins.Button.Exps={Text(){return this._text}};
+}
+
 // scripts/behaviors/Bullet/c3runtime/runtime.js
 {
 {const t=self.C3;t.Behaviors.Bullet=class extends t.SDKBehaviorBase{constructor(t){super(t)}Release(){super.Release()}}}{const t=self.C3;t.Behaviors.Bullet.Type=class extends t.SDKBehaviorTypeBase{constructor(t){super(t)}Release(){super.Release()}OnCreate(){}}}{const t=self.C3,e=self.C3X,s=self.IBehaviorInstance,i=0,n=1,h=2,a=3,_=4,l=5,o=6;t.Behaviors.Bullet.Instance=class extends t.SDKBehaviorInstanceBase{constructor(t,e){super(t);const s=this.GetWorldInfo();this._speed=0,this._acc=0,this._g=0,this._bounceOffSolid=!1,this._setAngle=!1,this._isStepping=!1,this._isEnabled=!0,this._dx=0,this._dy=0,this._lastX=s.GetX(),this._lastY=s.GetY(),this._lastKnownAngle=s.GetAngle(),this._travelled=0,this._stepSize=Math.min(Math.abs(s.GetWidth()),Math.abs(s.GetHeight())/2),this._stopStepping=!1,e&&(this._speed=e[i],this._acc=e[n],this._g=e[h],this._bounceOffSolid=!!e[a],this._setAngle=!!e[_],this._isStepping=!!e[l],this._isEnabled=!!e[o]);const r=s.GetAngle();this._dx=Math.cos(r)*this._speed,this._dy=Math.sin(r)*this._speed,this._isEnabled&&(this._StartTicking(),this._bounceOffSolid&&this._StartPostTicking())}Release(){super.Release()}SaveToJson(){const t={"dx":this._dx,"dy":this._dy,"lx":this._lastX,"ly":this._lastY,"lka":this._lastKnownAngle,"t":this._travelled};return 0!==this._acc&&(t["acc"]=this._acc),0!==this._g&&(t["g"]=this._g),this._isStepping&&(t["st"]=this._isStepping),this._isEnabled||(t["e"]=this._isEnabled),this._bounceOffSolid&&(t["bos"]=this._bounceOffSolid),this._setAngle&&(t["sa"]=this._setAngle),t}LoadFromJson(t){this._dx=t["dx"],this._dy=t["dy"],this._lastX=t["lx"],this._lastY=t["ly"],this._lastKnownAngle=t["lka"],this._travelled=t["t"],this._acc=t.hasOwnProperty("acc")?t["acc"]:0,this._g=t.hasOwnProperty("g")?t["g"]:0,this._isStepping=!!t.hasOwnProperty("st")&&t["st"],this._bounceOffSolid=!!t.hasOwnProperty("bos")&&t["bos"],this._setAngle=!!t.hasOwnProperty("sa")&&t["sa"],this._SetEnabled(!t.hasOwnProperty("e")||t["e"])}Tick(){if(!this._isEnabled)return;const e=this._runtime.GetDt(this._inst),s=this._inst.GetWorldInfo();if(s.GetAngle()!==this._lastKnownAngle){const e=s.GetAngle();if(this._setAngle){const s=t.distanceTo(0,0,this._dx,this._dy);this._dx=Math.cos(e)*s,this._dy=Math.sin(e)*s}this._lastKnownAngle=e}let i=0,n=0;if(0!==this._acc){let h=t.distanceTo(0,0,this._dx,this._dy),a=0;a=0===this._dx&&0===this._dy?s.GetAngle():t.angleTo(0,0,this._dx,this._dy),h+=this._acc*e,i=Math.cos(a)*this._acc,n=Math.sin(a)*this._acc,h<0&&(h=0,i=0,n=0),this._dx=Math.cos(a)*h,this._dy=Math.sin(a)*h}if(0!==this._g&&(this._dy+=this._g*e,n+=this._g),this._lastX=s.GetX(),this._lastY=s.GetY(),0!==this._dx||0!==this._dy){const h=this._dx*e+.5*i*e*e,a=this._dy*e+.5*n*e*e,_=t.distanceTo(0,0,h,a);if(this._MoveBy(h,a,_),this._travelled+=_,this._setAngle&&(0!==h||0!==a)){const e=t.angleTo(0,0,h,a);s.SetAngle(e),this._lastKnownAngle=s.GetAngle()}s.SetBboxChanged()}}_MoveBy(e,s,i){const n=this.GetWorldInfo();if(!this._isStepping||i<=this._stepSize)return n.OffsetXY(e,s),n.SetBboxChanged(),void(this._isStepping&&this.Trigger(t.Behaviors.Bullet.Cnds.OnStep));this._stopStepping=!1;const h=n.GetX(),a=n.GetY(),_=h+e,l=a+s,o=t.angleTo(0,0,e,s),r=Math.cos(o)*this._stepSize,d=Math.sin(o)*this._stepSize,c=Math.floor(i/this._stepSize);for(let e=1;e<=c;++e)if(n.SetXY(h+r*e,a+d*e),n.SetBboxChanged(),this.Trigger(t.Behaviors.Bullet.Cnds.OnStep),this._inst.IsDestroyed()||this._stopStepping)return;n.SetXY(_,l),n.SetBboxChanged(),this.Trigger(t.Behaviors.Bullet.Cnds.OnStep)}PostTick(){if(!this._isEnabled||!this._bounceOffSolid||0===this._dx&&0===this._dy)return;const e=this._runtime.GetDt(this._inst),s=this._inst.GetWorldInfo(),i=this._runtime.GetCollisionEngine(),n=i.TestOverlapSolid(this._inst);if(n){i.RegisterCollision(this._inst,n);const h=t.distanceTo(0,0,this._dx,this._dy),a=i.CalculateBounceAngle(this._inst,this._lastX,this._lastY);this._dx=Math.cos(a)*h,this._dy=Math.sin(a)*h,s.OffsetXY(this._dx*e,this._dy*e),s.SetBboxChanged(),this._setAngle&&(s.SetAngle(a),this._lastKnownAngle=s.GetAngle(),s.SetBboxChanged()),i.PushOutSolid(this._inst,this._dx/h,this._dy/h,Math.max(2.5*h*e,30))||i.PushOutSolidNearest(this._inst,100)}}GetPropertyValueByIndex(t){switch(t){case i:return this._GetSpeed();case n:return this._GetAcceleration();case h:return this._GetGravity();case _:return this._setAngle;case l:return this._isStepping;case o:return this._IsEnabled()}}SetPropertyValueByIndex(t,e){switch(t){case i:this._SetSpeed(e);break;case n:this._acc=e;break;case h:this._g=e;break;case _:this._setAngle=!!e;break;case l:this._isStepping=!!e;break;case o:this._SetEnabled(!!e)}}_SetSpeed(e){const s=t.angleTo(0,0,this._dx,this._dy);this._dx=Math.cos(s)*e,this._dy=Math.sin(s)*e}_GetSpeed(){return t.roundToDp(t.distanceTo(0,0,this._dx,this._dy),6)}_SetAcceleration(t){this._acc=t}_GetAcceleration(){return this._acc}_SetGravity(t){this._g=t}_GetGravity(){return this._g}_SetAngleOfMotion(e){const s=t.distanceTo(0,0,this._dx,this._dy);this._dx=Math.cos(e)*s,this._dy=Math.sin(e)*s}_GetAngleOfMotion(){return t.angleTo(0,0,this._dx,this._dy)}_SetBounceOffSolids(t){t=!!t,this._bounceOffSolid!==t&&(this._bounceOffSolid=t,this._isEnabled&&(this._bounceOffSolid?this._StartPostTicking():this._StopPostTicking()))}_IsBounceOffSolids(){return this._bounceOffSolid}_SetDistanceTravelled(t){this._travelled=t}_GetDistanceTravelled(){return this._travelled}_SetEnabled(t){this._isEnabled=!!t,this._isEnabled?(this._StartTicking(),this._bounceOffSolid&&this._StartPostTicking()):(this._StopTicking(),this._StopPostTicking())}_IsEnabled(){return this._isEnabled}GetDebuggerProperties(){const e="behaviors.bullet";return[{title:"$"+this.GetBehaviorType().GetName(),properties:[{name:e+".debugger.vector-x",value:this._dx,onedit:t=>this._dx=t},{name:e+".debugger.vector-y",value:this._dy,onedit:t=>this._dy=t},{name:e+".properties.speed.name",value:this._GetSpeed(),onedit:t=>this._SetSpeed(t)},{name:e+".debugger.angle-of-motion",value:t.toDegrees(this._GetAngleOfMotion())},{name:e+".properties.gravity.name",value:this._GetGravity(),onedit:t=>this._SetGravity(t)},{name:e+".properties.acceleration.name",value:this._GetAcceleration(),onedit:t=>this._SetAcceleration(t)},{name:e+".debugger.distance-travelled",value:this._GetDistanceTravelled()},{name:e+".properties.enabled.name",value:this._IsEnabled(),onedit:t=>this._SetEnabled(t)}]}]}GetScriptInterfaceClass(){return self.IBulletBehaviorInstance}};const r=new WeakMap;self.IBulletBehaviorInstance=class extends s{constructor(){super(),r.set(this,s._GetInitInst().GetSdkInstance())}get speed(){return r.get(this)._GetSpeed()}set speed(t){e.RequireFiniteNumber(t),r.get(this)._SetSpeed(t)}get acceleration(){return r.get(this)._GetAcceleration()}set acceleration(t){e.RequireFiniteNumber(t),r.get(this)._SetAcceleration(t)}get gravity(){return r.get(this)._GetGravity()}set gravity(t){e.RequireFiniteNumber(t),r.get(this)._SetGravity(t)}get angleOfMotion(){return r.get(this)._GetAngleOfMotion()}set angleOfMotion(t){e.RequireFiniteNumber(t),r.get(this)._SetAngleOfMotion(t)}get bounceOffSolids(){return r.get(this)._IsBounceOffSolids()}set bounceOffSolids(t){r.get(this)._SetBounceOffSolids(!!t)}get distanceTravelled(){return r.get(this)._GetDistanceTravelled()}set distanceTravelled(t){e.RequireFiniteNumber(t),r.get(this)._SetDistanceTravelled(t)}get isEnabled(){return r.get(this)._IsEnabled()}set isEnabled(t){r.get(this)._SetEnabled(t)}}}{const t=self.C3;t.Behaviors.Bullet.Cnds={CompareSpeed(e,s){const i=Math.hypot(this._dx,this._dy);return t.compare(i,e,s)},CompareTravelled(e,s){return t.compare(this._GetDistanceTravelled(),e,s)},OnStep:()=>!0,IsEnabled(){return this._IsEnabled()}}}{const t=self.C3;t.Behaviors.Bullet.Acts={SetSpeed(t){this._SetSpeed(t)},SetAcceleration(t){this._SetAcceleration(t)},SetGravity(t){this._SetGravity(t)},SetAngleOfMotion(e){this._SetAngleOfMotion(t.toRadians(e))},Bounce(e){if(!e)return;const s=e.GetFirstPicked(this._inst);if(!s)return;const i=this._inst.GetWorldInfo(),n=this._runtime.GetCollisionEngine(),h=this._runtime.GetDt(this._inst),a=t.distanceTo(0,0,this._dx,this._dy),_=n.CalculateBounceAngle(this._inst,this._lastX,this._lastY,s);this._dx=Math.cos(_)*a,this._dy=Math.sin(_)*a,i.OffsetXY(this._dx*h,this._dy*h),i.SetBboxChanged(),this._setAngle&&(i.SetAngle(_),this._lastKnownAngle=i.GetAngle(),i.SetBboxChanged()),0!==a&&(this._bounceOffSolid?n.PushOutSolid(this._inst,this._dx/a,this._dy/a,Math.max(2.5*a*h,30))||n.PushOutSolidNearest(this._inst,100):n.PushOut(this._inst,this._dx/a,this._dy/a,Math.max(2.5*a*h,30),s))},SetBounceOffSolids(t){this._SetBounceOffSolids(t)},SetDistanceTravelled(t){this._SetDistanceTravelled(t)},SetEnabled(t){this._SetEnabled(t)},StopStepping(){this._stopStepping=!0}}}{const t=self.C3;t.Behaviors.Bullet.Exps={Speed(){return this._GetSpeed()},Acceleration(){return this._GetAcceleration()},AngleOfMotion(){return t.toDegrees(this._GetAngleOfMotion())},DistanceTravelled(){return this._GetDistanceTravelled()},Gravity(){return this._GetGravity()}}}
@@ -1370,7 +1380,7 @@ self.C3_ExpressionFuncs = [
 		() => 193,
 		() => 927,
 		() => 187,
-		() => "Items",
+		() => "Junk",
 		() => 171,
 		() => 2190,
 		p => {
@@ -1390,10 +1400,8 @@ self.C3_ExpressionFuncs = [
 		() => "Legendary",
 		() => "Battle",
 		() => "normal",
-		() => "rare",
 		() => "legend",
 		() => "battle",
-		() => 1.5,
 		() => 539,
 		() => 1818,
 		() => 408,
@@ -1404,6 +1412,7 @@ self.C3_ExpressionFuncs = [
 		},
 		() => 540,
 		() => 290,
+		() => "Final",
 		() => 541,
 		() => 1711,
 		() => 1712,
@@ -1447,6 +1456,7 @@ self.C3_ExpressionFuncs = [
 			const f2 = p._GetNode(2).GetBoundMethod();
 			return () => n0.ExpObject(0, f1(f2(29, 38)));
 		},
+		() => "rare",
 		p => {
 			const n0 = p._GetNode(0);
 			const f1 = p._GetNode(1).GetBoundMethod();
@@ -1496,6 +1506,8 @@ self.C3_ExpressionFuncs = [
 			return () => n0.ExpObject(0, f1(f2(8, 10)));
 		},
 		() => "Раскол в земле – место сокровенных сокровищ и опасностей",
+		() => 902,
+		() => 0.3,
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject();
@@ -1564,8 +1576,29 @@ self.C3_ExpressionFuncs = [
 		() => "Съесть",
 		() => 660,
 		() => "Приготовить",
+		() => 138,
+		() => 1678,
+		() => 73,
+		() => 70,
+		() => 182,
+		() => 1640,
+		() => "-7%",
+		() => 358,
+		() => 400,
+		() => 636,
+		() => 680,
+		() => "+7%",
+		() => 857.692247,
+		() => 1672.497945,
+		() => 55.32703,
+		() => 78.487182,
+		() => 898,
 		() => "Продолжить работать",
 		() => "Перекусить \nна ходу",
+		() => "-10%",
+		() => 92,
+		() => 858,
+		() => 1673,
 		() => "Повернуться к ветру",
 		() => "Прикрыть \nлицо",
 		() => "Потереть \nоб камень",
@@ -1583,13 +1616,11 @@ self.C3_ExpressionFuncs = [
 			return () => n0.ExpObject(0, 9);
 		},
 		() => "+4",
-		() => "-10%",
 		() => 10,
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject(0, 10);
 		},
-		() => "-7%",
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject(0, 11);
@@ -1598,7 +1629,6 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject(0, 12);
 		},
-		() => "+7%",
 		p => {
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject(0, 13);
@@ -1783,6 +1813,12 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "Choice buttons",
 		() => "100 m",
+		() => 1.2,
+		() => 0.7,
+		() => 0.8,
+		() => 418,
+		() => "Продолжить",
+		() => 1.3,
 		() => "-3%",
 		() => "200 m",
 		() => 1700,
@@ -1796,14 +1832,7 @@ self.C3_ExpressionFuncs = [
 		() => "300 m2",
 		() => "400 m2",
 		() => "Rewards",
-		() => 1.2,
-		() => 0.3,
-		() => 0.7,
-		() => 418,
-		() => "Продолжить",
-		() => 0.8,
 		() => 0.5,
-		() => 1.3,
 		() => "Pause",
 		() => "Battle_inside",
 		() => 621,
@@ -1854,7 +1883,7 @@ self.C3_ExpressionFuncs = [
 			const v8 = p._GetNode(8).GetVar();
 			const v9 = p._GetNode(9).GetVar();
 			const v10 = p._GetNode(10).GetVar();
-			return () => add(add(f0((v1.GetValue() - f2(((v3.GetValue() / 100) * 10))), (v4.GetValue() + f5(((v6.GetValue() / 100) * 20)))), (v7.GetValue() * (v8.GetValue() / 1000))), (v9.GetValue() * (v10.GetValue() / 1000)));
+			return () => add(add(f0((v1.GetValue() - f2(((v3.GetValue() / 100) * 10))), (v4.GetValue() + f5(((v6.GetValue() / 100) * 20)))), (v7.GetValue() * (v8.GetValue() / 100))), (v9.GetValue() * (v10.GetValue() / 100)));
 		},
 		() => 164,
 		() => 382,
@@ -1877,7 +1906,6 @@ self.C3_ExpressionFuncs = [
 		() => "Player",
 		() => "Inventory",
 		() => 0.2,
-		() => 0.4,
 		() => 808,
 		() => 600,
 		() => 242,
@@ -1899,6 +1927,76 @@ self.C3_ExpressionFuncs = [
 		() => 504,
 		() => 655,
 		() => 804,
+		() => "UI",
+		() => 2008,
+		() => 966,
+		() => 285,
+		() => 1011,
+		() => 135.760359,
+		() => 126.288706,
+		() => 247.090852,
+		() => 1084,
+		() => 538,
+		() => 1015,
+		() => 123.312104,
+		() => 114.708934,
+		() => 505,
+		() => 799,
+		() => 1017,
+		() => 142.235913,
+		() => 132.312478,
+		() => 764,
+		() => 403,
+		() => 1301,
+		() => 137.113015,
+		() => 127.546991,
+		() => 363.41817,
+		() => 1368,
+		() => 676,
+		() => 110.967742,
+		() => 103.225806,
+		() => 638,
+		() => 635,
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			const v1 = p._GetNode(1).GetVar();
+			const v2 = p._GetNode(2).GetVar();
+			const v3 = p._GetNode(3).GetVar();
+			const v4 = p._GetNode(4).GetVar();
+			return () => ((((v0.GetValue() + (v1.GetValue() * 2)) + (v2.GetValue() * 3)) + (v3.GetValue() * 4)) + (v4.GetValue() * 5));
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() - 130);
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => (n0.ExpObject() - 85);
+		},
+		() => "Забрать\nнаграду",
+		() => "Send Data",
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			const f1 = p._GetNode(1).GetBoundMethod();
+			const v2 = p._GetNode(2).GetVar();
+			return () => ((v0.GetValue() + "?name=") + f1(v2.GetValue()));
+		},
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			const v1 = p._GetNode(1).GetVar();
+			return () => and((v0.GetValue() + "&score="), v1.GetValue());
+		},
+		() => "senddata",
+		() => "GET",
+		() => 1019,
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => ("Response: " + f0());
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => ("Error: " + f0());
+		},
 		() => 60,
 		p => {
 			const n0 = p._GetNode(0);
@@ -1919,6 +2017,7 @@ self.C3_ExpressionFuncs = [
 			return () => f0(0, (v1.GetValue() - 4));
 		},
 		() => "Die",
+		() => 1.5,
 		() => 540.5,
 		() => 1383,
 		() => 26,
