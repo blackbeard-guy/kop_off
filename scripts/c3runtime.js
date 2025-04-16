@@ -1081,21 +1081,6 @@ const C3=self.C3;C3.JobSchedulerRuntime=class extends C3.DefendedBase{constructo
 // scripts/shaders.js
 {
 self["C3_Shaders"] = {};
-self["C3_Shaders"]["blurvertical"] = {
-	glsl: "varying mediump vec2 vTex;\nuniform mediump sampler2D samplerFront;\nuniform mediump vec2 pixelSize;\nuniform mediump float intensity;\nvoid main(void)\n{\nmediump vec4 sum = vec4(0.0);\nmediump float pixelHeight = pixelSize.y;\nmediump float halfPixelHeight = pixelHeight / 2.0;\nsum += texture2D(samplerFront, vTex - vec2(0.0, pixelHeight * 7.0 + halfPixelHeight)) * 0.06;\nsum += texture2D(samplerFront, vTex - vec2(0.0, pixelHeight * 5.0 + halfPixelHeight)) * 0.10;\nsum += texture2D(samplerFront, vTex - vec2(0.0, pixelHeight * 3.0 + halfPixelHeight)) * 0.13;\nsum += texture2D(samplerFront, vTex - vec2(0.0, pixelHeight * 1.0 + halfPixelHeight)) * 0.16;\nmediump vec4 front = texture2D(samplerFront, vTex);\nsum += front * 0.10;\nsum += texture2D(samplerFront, vTex + vec2(0.0, pixelHeight * 1.0 + halfPixelHeight)) * 0.16;\nsum += texture2D(samplerFront, vTex + vec2(0.0, pixelHeight * 3.0 + halfPixelHeight)) * 0.13;\nsum += texture2D(samplerFront, vTex + vec2(0.0, pixelHeight * 5.0 + halfPixelHeight)) * 0.10;\nsum += texture2D(samplerFront, vTex + vec2(0.0, pixelHeight * 7.0 + halfPixelHeight)) * 0.06;\ngl_FragColor = mix(front, sum, intensity);\n}",
-	glslWebGL2: "",
-	wgsl: "%%SAMPLERFRONT_BINDING%% var samplerFront : sampler;\n%%TEXTUREFRONT_BINDING%% var textureFront : texture_2d<f32>;\nstruct ShaderParams {\nintensity : f32\n};\n%%SHADERPARAMS_BINDING%% var<uniform> shaderParams : ShaderParams;\n%%C3_UTILITY_FUNCTIONS%%\n%%FRAGMENTINPUT_STRUCT%%\n%%FRAGMENTOUTPUT_STRUCT%%\n@fragment\nfn main(input : FragmentInput) -> FragmentOutput\n{\nvar pixelHeight : f32 = c3_getPixelSize(textureFront).y;\nvar front : vec4<f32> = textureSample(textureFront, samplerFront, input.fragUV);\nvar sum : vec4<f32> =\ntextureSample(textureFront, samplerFront, input.fragUV - vec2<f32>(0.0, pixelHeight * 7.5)) * 0.06 +\ntextureSample(textureFront, samplerFront, input.fragUV - vec2<f32>(0.0, pixelHeight * 5.5)) * 0.10 +\ntextureSample(textureFront, samplerFront, input.fragUV - vec2<f32>(0.0, pixelHeight * 3.5)) * 0.13 +\ntextureSample(textureFront, samplerFront, input.fragUV - vec2<f32>(0.0, pixelHeight * 1.5)) * 0.16 +\nfront * 0.10 +\ntextureSample(textureFront, samplerFront, input.fragUV + vec2<f32>(0.0, pixelHeight * 1.5)) * 0.16 +\ntextureSample(textureFront, samplerFront, input.fragUV + vec2<f32>(0.0, pixelHeight * 3.5)) * 0.13 +\ntextureSample(textureFront, samplerFront, input.fragUV + vec2<f32>(0.0, pixelHeight * 5.5)) * 0.10 +\ntextureSample(textureFront, samplerFront, input.fragUV + vec2<f32>(0.0, pixelHeight * 7.5)) * 0.06;\nvar output : FragmentOutput;\noutput.color = mix(front, sum, shaderParams.intensity);\nreturn output;\n}",
-	blendsBackground: false,
-	usesDepth: false,
-	extendBoxHorizontal: 0,
-	extendBoxVertical: 8,
-	crossSampling: false,
-	mustPreDraw: false,
-	preservesOpaqueness: false,
-	supports3dDirectRendering: false,
-	animated: false,
-	parameters: [["intensity",0,"percent"]]
-};
 self["C3_Shaders"]["skymen_BetterOutline"] = {
 	glsl: "uniform lowp vec3 outlinecolor;\nuniform lowp float width;\nuniform lowp float precisionStep;\nuniform lowp float samples;\nuniform lowp float outlineOpacity;\nvarying mediump vec2 vTex;\nuniform lowp sampler2D samplerFront;\nuniform mediump vec2 srcStart;\nuniform mediump vec2 srcEnd;\nuniform mediump vec2 srcOriginStart;\nuniform mediump vec2 srcOriginEnd;\nuniform mediump vec2 layoutStart;\nuniform mediump vec2 layoutEnd;\nuniform lowp sampler2D samplerBack;\nuniform mediump vec2 destStart;\nuniform mediump vec2 destEnd;\nuniform mediump float seconds;\nuniform mediump vec2 pixelSize;\nuniform mediump float layerScale;\nuniform mediump float layerAngle;\n#define PI 3.14159265359\n#define SAMPLES 96\n#define PASSES 64\nvoid main(void)\n{\nif (width <= 0.0 || outlineOpacity <= 0.0) {\ngl_FragColor = texture2D( samplerFront, vTex );\nreturn;\n}\nmediump float outlineAlpha = 0.0;\nmediump vec2 actualWidth;\nmediump float widthCopy = width;\nmediump vec4 color = vec4(outlinecolor.x, outlinecolor.y, outlinecolor.z, 1.0);\nmediump float angle;\nmediump vec2 layoutSize = abs(vec2(layoutEnd.x-layoutStart.x,(layoutEnd.y-layoutStart.y)));\nmediump vec2 texelSize = abs(srcOriginEnd-srcOriginStart)/layoutSize;\nmediump vec4 fragColor;\nmediump vec2 testPoint;\nmediump float sampledAlpha;\nint passes = int(clamp(width / precisionStep, 1.0, float(PASSES)));\nfor (int j=0; j<PASSES; j++) {\nif (j >= passes ) break;\nwidthCopy = mix(0.0, width, float(j)/float(passes));\nactualWidth = widthCopy * texelSize;\nangle = 0.0;\nfor( int i=0; i<SAMPLES; i++ ){\nif (i >= int(samples)) break;\nangle += 1.0/(clamp(samples, 0.0, float(SAMPLES))/2.0) * PI;\ntestPoint = vTex + actualWidth * vec2(cos(angle), sin(angle));\nsampledAlpha = texture2D( samplerFront,  testPoint ).a;\noutlineAlpha = max( outlineAlpha, sampledAlpha );\n}\n}\nfragColor = color * outlineAlpha * outlineOpacity;\nmediump vec4 tex0 = texture2D( samplerFront, vTex );\ngl_FragColor = fragColor * (1. - tex0.a) + tex0;\n}",
 	glslWebGL2: "#version 300 es\nin mediump vec2 vTex;\nout lowp vec4 outColor;\n#ifdef GL_FRAGMENT_PRECISION_HIGH\n#define highmedp highp\n#else\n#define highmedp mediump\n#endif\nprecision lowp float;\nuniform lowp sampler2D samplerFront;\nuniform mediump vec2 srcStart;\nuniform mediump vec2 srcEnd;\nuniform mediump vec2 srcOriginStart;\nuniform mediump vec2 srcOriginEnd;\nuniform mediump vec2 layoutStart;\nuniform mediump vec2 layoutEnd;\nuniform lowp sampler2D samplerBack;\nuniform lowp sampler2D samplerDepth;\nuniform mediump vec2 destStart;\nuniform mediump vec2 destEnd;\nuniform highmedp float seconds;\nuniform mediump vec2 pixelSize;\nuniform mediump float layerScale;\nuniform mediump float layerAngle;\nuniform mediump float devicePixelRatio;\nuniform mediump float zNear;\nuniform mediump float zFar;\nuniform lowp vec3 outlinecolor;\nuniform lowp float width;\nuniform lowp float precisionStep;\nuniform lowp float samples;\nuniform lowp float outlineOpacity;\n#define PI 3.14159265359\n#define SAMPLES 96\n#define PASSES 64\nvoid main(void)\n{\nif (width <= 0.0 || outlineOpacity <= 0.0) {\noutColor = texture( samplerFront, vTex );\nreturn;\n}\nmediump float outlineAlpha = 0.0;\nmediump vec2 actualWidth;\nmediump float widthCopy = width;\nmediump vec4 color = vec4(outlinecolor.x, outlinecolor.y, outlinecolor.z, 1.0);\nmediump float angle;\nmediump vec2 layoutSize = abs(vec2(layoutEnd.x-layoutStart.x,(layoutEnd.y-layoutStart.y)));\nmediump vec2 texelSize = abs(srcOriginEnd-srcOriginStart)/layoutSize;\nmediump vec4 fragColor;\nmediump vec2 testPoint;\nmediump float sampledAlpha;\nint passes = int(clamp(width / precisionStep, 1.0, float(PASSES)));\nint sampleCount = int(clamp(samples, 0.0, float(SAMPLES)));\nfor (int j = 0; j <= passes; j++) {\nwidthCopy = mix(0.0, width, float(j)/float(passes));\nactualWidth = widthCopy * texelSize;\nangle = 0.0;\nfor( int i = 0; i < sampleCount; i++ ) {\nangle += 1.0/(float(sampleCount)/2.0) * PI;\ntestPoint = vTex + actualWidth * vec2(cos(angle), sin(angle));\nsampledAlpha = texture( samplerFront,  testPoint ).a;\noutlineAlpha = max( outlineAlpha, sampledAlpha );\n}\n}\nfragColor = color * outlineAlpha * outlineOpacity;\nmediump vec4 tex0 = texture( samplerFront, vTex );\noutColor = fragColor * (1. - tex0.a) + tex0;\n}",
@@ -1110,6 +1095,21 @@ self["C3_Shaders"]["skymen_BetterOutline"] = {
 	supports3dDirectRendering: false,
 	animated: false,
 	parameters: [["outlinecolor",0,"color"],["width",0,"float"],["precisionStep",0,"float"],["samples",0,"float"],["outlineOpacity",0,"percent"]]
+};
+self["C3_Shaders"]["blurvertical"] = {
+	glsl: "varying mediump vec2 vTex;\nuniform mediump sampler2D samplerFront;\nuniform mediump vec2 pixelSize;\nuniform mediump float intensity;\nvoid main(void)\n{\nmediump vec4 sum = vec4(0.0);\nmediump float pixelHeight = pixelSize.y;\nmediump float halfPixelHeight = pixelHeight / 2.0;\nsum += texture2D(samplerFront, vTex - vec2(0.0, pixelHeight * 7.0 + halfPixelHeight)) * 0.06;\nsum += texture2D(samplerFront, vTex - vec2(0.0, pixelHeight * 5.0 + halfPixelHeight)) * 0.10;\nsum += texture2D(samplerFront, vTex - vec2(0.0, pixelHeight * 3.0 + halfPixelHeight)) * 0.13;\nsum += texture2D(samplerFront, vTex - vec2(0.0, pixelHeight * 1.0 + halfPixelHeight)) * 0.16;\nmediump vec4 front = texture2D(samplerFront, vTex);\nsum += front * 0.10;\nsum += texture2D(samplerFront, vTex + vec2(0.0, pixelHeight * 1.0 + halfPixelHeight)) * 0.16;\nsum += texture2D(samplerFront, vTex + vec2(0.0, pixelHeight * 3.0 + halfPixelHeight)) * 0.13;\nsum += texture2D(samplerFront, vTex + vec2(0.0, pixelHeight * 5.0 + halfPixelHeight)) * 0.10;\nsum += texture2D(samplerFront, vTex + vec2(0.0, pixelHeight * 7.0 + halfPixelHeight)) * 0.06;\ngl_FragColor = mix(front, sum, intensity);\n}",
+	glslWebGL2: "",
+	wgsl: "%%SAMPLERFRONT_BINDING%% var samplerFront : sampler;\n%%TEXTUREFRONT_BINDING%% var textureFront : texture_2d<f32>;\nstruct ShaderParams {\nintensity : f32\n};\n%%SHADERPARAMS_BINDING%% var<uniform> shaderParams : ShaderParams;\n%%C3_UTILITY_FUNCTIONS%%\n%%FRAGMENTINPUT_STRUCT%%\n%%FRAGMENTOUTPUT_STRUCT%%\n@fragment\nfn main(input : FragmentInput) -> FragmentOutput\n{\nvar pixelHeight : f32 = c3_getPixelSize(textureFront).y;\nvar front : vec4<f32> = textureSample(textureFront, samplerFront, input.fragUV);\nvar sum : vec4<f32> =\ntextureSample(textureFront, samplerFront, input.fragUV - vec2<f32>(0.0, pixelHeight * 7.5)) * 0.06 +\ntextureSample(textureFront, samplerFront, input.fragUV - vec2<f32>(0.0, pixelHeight * 5.5)) * 0.10 +\ntextureSample(textureFront, samplerFront, input.fragUV - vec2<f32>(0.0, pixelHeight * 3.5)) * 0.13 +\ntextureSample(textureFront, samplerFront, input.fragUV - vec2<f32>(0.0, pixelHeight * 1.5)) * 0.16 +\nfront * 0.10 +\ntextureSample(textureFront, samplerFront, input.fragUV + vec2<f32>(0.0, pixelHeight * 1.5)) * 0.16 +\ntextureSample(textureFront, samplerFront, input.fragUV + vec2<f32>(0.0, pixelHeight * 3.5)) * 0.13 +\ntextureSample(textureFront, samplerFront, input.fragUV + vec2<f32>(0.0, pixelHeight * 5.5)) * 0.10 +\ntextureSample(textureFront, samplerFront, input.fragUV + vec2<f32>(0.0, pixelHeight * 7.5)) * 0.06;\nvar output : FragmentOutput;\noutput.color = mix(front, sum, shaderParams.intensity);\nreturn output;\n}",
+	blendsBackground: false,
+	usesDepth: false,
+	extendBoxHorizontal: 0,
+	extendBoxVertical: 8,
+	crossSampling: false,
+	mustPreDraw: false,
+	preservesOpaqueness: false,
+	supports3dDirectRendering: false,
+	animated: false,
+	parameters: [["intensity",0,"percent"]]
 };
 
 }
@@ -1172,6 +1172,11 @@ const C3=self.C3,_1_SHL_53=9007199254740992;let splitstate=BigInt(0),s=[BigInt(0
 // scripts/plugins/Button/c3runtime/runtime.js
 {
 {const e=self.C3,t="button";e.Plugins.Button=class extends e.SDKDOMPluginBase{constructor(e){super(e,t),this.AddElementMessageHandler("click",((e,t)=>e._OnClick(t)))}Release(){super.Release()}}}{const e=self.C3;e.Plugins.Button.Type=class extends e.SDKTypeBase{constructor(e){super(e)}Release(){super.Release()}OnCreate(){}}}{const e=self.C3,t=self.C3X,s=0,i=1,n=2,h=3,a=4,l=5,c=6,r=7,_=8,d="button";e.Plugins.Button.Instance=class extends e.SDKDOMInstanceBase{constructor(e,t){super(e,d),this._text="OK",this._isCheckbox=!1,this._isChecked=!1,this._title="",this._id="",this._className="",this._isEnabled=!0,this._autoFontSize=!0,t&&(this._isCheckbox=1===t[s],this._text=t[i],this._title=t[n],this.GetWorldInfo().SetVisible(t[h]),this._isEnabled=t[a],this._autoFontSize=t[l],this._isChecked=t[c],this._id=t[r],this._className=t[_]),this.CreateElement({"id":this._id,"className":this._className})}Release(){super.Release()}GetElementState(){return{"text":this._text,"isCheckbox":this._isCheckbox,"isChecked":this._isChecked,"title":this._title,"isVisible":this.GetWorldInfo().IsVisible(),"isEnabled":this._isEnabled}}async _OnClick(t){this._isChecked=t["isChecked"],this.DispatchScriptEvent("click",!0),await this.TriggerAsync(e.Plugins.Button.Cnds.OnClicked)}_SetText(e){this._text!==e&&(this._text=e,this.UpdateElementState())}_GetText(){return this._text}_SetTooltip(e){this._title!==e&&(this._title=e,this.UpdateElementState())}_GetTooltip(){return this._title}_SetEnabled(e){e=!!e,this._isEnabled!==e&&(this._isEnabled=e,this.UpdateElementState())}_IsEnabled(){return this._isEnabled}_SetChecked(e){this._isCheckbox&&(e=!!e,this._isChecked!==e&&(this._isChecked=e,this.UpdateElementState()))}_IsChecked(){return this._isChecked}Draw(e){}SaveToJson(){return{"text":this._text,"checked":this._isChecked,"title":this._title,"enabled":this._isEnabled}}LoadFromJson(e){this._text=e["text"],this._isChecked=e["checked"],this._title=e["title"],this._isEnabled=e["enabled"],this.UpdateElementState()}GetPropertyValueByIndex(e){switch(e){case i:return this._GetText();case n:return this._GetTooltip();case a:return this._IsEnabled();case l:return this._autoFontSize;case c:return this._IsChecked()}}SetPropertyValueByIndex(e,t){switch(e){case i:this._SetText(t);break;case n:this._SetTooltip(t);break;case a:this._SetEnabled(!!t);break;case l:this._autoFontSize=!!t;break;case c:this._SetChecked(!!t)}}GetDebuggerProperties(){const e="plugins.button";return[{title:e+".name",properties:[{name:e+".properties.text.name",value:this._GetText(),onedit:e=>this._SetText(e)},{name:e+".properties.enabled.name",value:this._IsEnabled(),onedit:e=>this._SetEnabled(e)},{name:e+".properties.checked.name",value:this._IsChecked(),onedit:e=>this._SetChecked(e)}]}]}GetScriptInterfaceClass(){return self.IButtonInstance}};const o=new WeakMap;self.IButtonInstance=class extends self.IDOMInstance{constructor(){super(),o.set(this,self.IInstance._GetInitInst().GetSdkInstance())}set text(e){t.RequireString(e),o.get(this)._SetText(e)}get text(){return o.get(this)._GetText()}set tooltip(e){t.RequireString(e),o.get(this)._SetTooltip(e)}get tooltip(){return o.get(this)._GetTooltip()}set isEnabled(e){o.get(this)._SetEnabled(e)}get isEnabled(){return o.get(this)._IsEnabled()}set isChecked(e){o.get(this)._SetChecked(e)}get isChecked(){return o.get(this)._IsChecked()}}}{const e=self.C3;e.Plugins.Button.Cnds={OnClicked:()=>!0,IsChecked(){return this._isChecked},CompareText(t,s){return s?this._text===t:e.equalsNoCase(this._text,t)}}}self.C3.Plugins.Button.Acts={SetText(e){this._SetText(e)},SetTooltip(e){this._SetTooltip(e)},SetChecked(e){this._SetChecked(0!==e)},ToggleChecked(){this._isCheckbox&&(this._isChecked=!this._isChecked,this.UpdateElementState())}};self.C3.Plugins.Button.Exps={Text(){return this._text}};
+}
+
+// scripts/plugins/Browser/c3runtime/runtime.js
+{
+{const e=self.C3;e.Plugins.Browser=class extends e.SDKPluginBase{constructor(e){super(e)}Release(){super.Release()}}}{const e=self.C3;e.Plugins.Browser.Type=class extends e.SDKTypeBase{constructor(e){super(e)}Release(){super.Release()}OnCreate(){}}}{const e=self.C3,t="browser";e.Plugins.Browser.Instance=class extends e.SDKInstanceBase{constructor(s,n){super(s,t),this._initLocationStr="",this._isOnline=!1,this._referrer="",this._docTitle="",this._isCookieEnabled=!1,this._screenWidth=0,this._screenHeight=0,this._windowOuterWidth=0,this._windowOuterHeight=0,this._windowHasFocus=!1,this._isConstructArcade=!1,this._cssStyleMap=new Map,this._isInstallAvailable=!1,this._installResult="",this._isWarnOnCloseEnabled=!1,this.AddDOMMessageHandlers([["online-state",e=>this._OnOnlineStateChanged(e)],["backbutton",()=>this._OnBackButton()],["sw-message",e=>this._OnSWMessage(e)],["hashchange",e=>this._OnHashChange(e)],["install-available",()=>this._OnInstallAvailable()],["app-installed",e=>this._OnAppInstalled(e)]]);const i=this.GetRuntime().Dispatcher();this._disposables=new e.CompositeDisposable(e.Disposable.From(i,"afterfirstlayoutstart",(()=>this._OnAfterFirstLayoutStart())),e.Disposable.From(i,"window-resize",(()=>this._OnWindowResize())),e.Disposable.From(i,"window-focus",(()=>this._OnWindowFocus())),e.Disposable.From(i,"window-blur",(()=>this._OnWindowBlur())),e.Disposable.From(i,"suspend",(()=>this._OnSuspend())),e.Disposable.From(i,"resume",(()=>this._OnResume()))),this._runtime.AddLoadPromise(this.PostToDOMAsync("get-initial-state",{"exportType":this._runtime.GetExportType()}).then((e=>{this._initLocationStr=e["location"],this._isOnline=e["isOnline"],this._referrer=e["referrer"],this._docTitle=e["title"],this._isCookieEnabled=e["isCookieEnabled"],this._screenWidth=e["screenWidth"],this._screenHeight=e["screenHeight"],this._windowOuterWidth=e["windowOuterWidth"],this._windowOuterHeight=e["windowOuterHeight"],this._windowHasFocus=e["windowHasFocus"],this._isConstructArcade=e["isConstructArcade"]})))}Release(){super.Release()}_OnAfterFirstLayoutStart(){this.PostToDOM("ready-for-sw-messages")}async _OnOnlineStateChanged(t){const s=!!t["isOnline"];this._isOnline!==s&&(this._isOnline=s,this._isOnline?await this.TriggerAsync(e.Plugins.Browser.Cnds.OnOnline):await this.TriggerAsync(e.Plugins.Browser.Cnds.OnOffline))}async _OnWindowResize(){await this.TriggerAsync(e.Plugins.Browser.Cnds.OnResize)}async _OnWindowFocus(){this._windowHasFocus=!0,await this.TriggerAsync(e.Plugins.Browser.Cnds.OnWindowFocus)}async _OnWindowBlur(){this._windowHasFocus=!1,await this.TriggerAsync(e.Plugins.Browser.Cnds.OnWindowBlur)}_OnSuspend(){this.Trigger(e.Plugins.Browser.Cnds.OnPageHidden)}_OnResume(){this.Trigger(e.Plugins.Browser.Cnds.OnPageVisible)}async _OnBackButton(){await this.TriggerAsync(e.Plugins.Browser.Cnds.OnBackButton)}_OnSWMessage(t){const s=t["type"];"downloading-update"===s?this.Trigger(e.Plugins.Browser.Cnds.OnUpdateFound):"update-ready"===s||"update-pending"===s?this.Trigger(e.Plugins.Browser.Cnds.OnUpdateReady):"offline-ready"===s&&this.Trigger(e.Plugins.Browser.Cnds.OnOfflineReady)}_OnHashChange(t){this._initLocationStr=t["location"],this.Trigger(e.Plugins.Browser.Cnds.OnHashChange)}_OnInstallAvailable(){this._isInstallAvailable=!0,this.Trigger(e.Plugins.Browser.Cnds.OnInstallAvailable)}_OnAppInstalled(t){this._isInstallAvailable=!1,this.Trigger(e.Plugins.Browser.Cnds.OnAppInstalled)}_IsWarnOnCloseEnabled(){return this._isWarnOnCloseEnabled}_SetWarnOnCloseEnabled(e){e=!!e,this._isWarnOnCloseEnabled!==e&&(this._isWarnOnCloseEnabled=e,this.PostToDOM("set-warn-on-close",{"enabled":e}))}GetDebuggerProperties(){const e="plugins.browser.debugger";return[{title:"plugins.browser.name",properties:[{name:e+".user-agent",value:navigator.userAgent},{name:e+".is-online",value:this._isOnline},{name:e+".is-fullscreen",value:this._runtime.GetCanvasManager().IsDocumentFullscreen()}]}]}}}{const e=self.C3;e.Plugins.Browser.Cnds={IsOnline(){return this._isOnline},OnOnline:()=>!0,OnOffline:()=>!0,OnResize:()=>!0,OnWindowFocus:()=>!0,OnWindowBlur:()=>!0,WindowHasFocus(){return this._windowHasFocus},CookiesEnabled(){return this._isCookieEnabled},IsFullscreen(){return this._runtime.GetCanvasManager().IsDocumentFullscreen()},OnBackButton:()=>!0,IsPortraitLandscape(e){return(this._runtime.GetCanvasManager().GetLastWidth()<=this._runtime.GetCanvasManager().GetLastHeight()?0:1)===e},OnUpdateFound:()=>!0,OnUpdateReady:()=>!0,OnOfflineReady:()=>!0,OnHashChange:()=>!0,OnInstallAvailable:()=>!0,IsInstallAvailable(){return this._isInstallAvailable},OnInstallResult(e){switch(e){case 0:return"accepted"===this._installResult;case 1:return"dismissed"===this._installResult;case 2:return"error"===this._installResult;case 3:return!0;default:return!1}},OnAppInstalled:()=>!0,CompareDisplayMode(e){const t=this._runtime.GetCanvasManager().GetCssDisplayMode();switch(e){case 0:return"browser"===t;case 1:return"minimal-ui"===t;case 2:return"standalone"===t;case 3:return"fullscreen"===t;default:return!1}},IsWarnOnCloseEnabled(){return this._IsWarnOnCloseEnabled()},PageVisible(){return!this._runtime.IsSuspended()},OnPageHidden:()=>!0,OnPageVisible:()=>!0,HasJava:()=>!1,IsDownloadingUpdate:()=>!1,OnMenuButton:()=>!1,OnSearchButton:()=>!1,IsMetered:()=>!1,IsCharging:()=>!0,SupportsFullscreen:()=>!0}}{const C3=self.C3,ORIENTATIONS=["portrait","landscape","portrait-primary","portrait-secondary","landscape-primary","landscape-secondary"];C3.Plugins.Browser.Acts={Alert(e){this.PostToDOM("alert",{"message":e.toString()})},Close(){this._isConstructArcade||(this._runtime.IsDebug()?self.C3Debugger.CloseWindow():this.PostToDOM("close"))},Focus(){this.PostToDOM("set-focus",{"isFocus":!0})},Blur(){this.PostToDOM("set-focus",{"isFocus":!1})},GoBack(){this._isConstructArcade||this.PostToDOM("navigate",{"type":"back"})},GoForward(){this._isConstructArcade||this.PostToDOM("navigate",{"type":"forward"})},GoHome(){},Reload(){this._isConstructArcade||(this._runtime.IsDebug()?this._runtime.PostToDebugger({"type":"reload"}):this.PostToDOM("navigate",{"type":"reload"}))},GoToURL(e,t){this._PostToDOMMaybeSync("navigate",{"type":"url","url":e,"target":t,"exportType":this._runtime.GetExportType()})},GoToURLWindow(e,t){this._PostToDOMMaybeSync("navigate",{"type":"new-window","url":e,"tag":t,"exportType":this._runtime.GetExportType()})},RequestFullScreen(e,t){e>=2&&(e+=1),6===e&&(e=2),1===e&&(e=0);const s=C3.CanvasManager._FullscreenModeNumberToString(e);this._runtime.GetCanvasManager().SetDocumentFullscreenMode(s),this._PostToDOMMaybeSync("request-fullscreen",{"navUI":t})},CancelFullScreen(){this._PostToDOMMaybeSync("exit-fullscreen")},Vibrate(e){const t=e.split(",");for(let e=0,s=t.length;e<s;++e)t[e]=parseInt(t[e],10);this._PostToDOMMaybeSync("vibrate",{"pattern":t})},async InvokeDownload(e,t){if(!e||!t)return;const s=await this._runtime.GetAssetManager().GetProjectFileUrl(e);this._runtime.InvokeDownload(s,t)},InvokeDownloadString(e,t,s){if(!s)return;const n=`data:${t},${encodeURIComponent(e)}`;this._runtime.InvokeDownload(n,s)},ConsoleLog(e,t){t=t.toString(),0===e?console.log(t):1===e?console.warn(t):2===e&&console.error(t)},ConsoleGroup(e){console.group(e)},ConsoleGroupEnd(){console.groupEnd()},ExecJs(jsStr){try{eval(jsStr)}catch(e){console.error("Error executing JavaScript: ",e)}},LockOrientation(e){if((e=Math.floor(e))<0||e>=ORIENTATIONS.length)return;const t=ORIENTATIONS[e];this._PostToDOMMaybeSync("lock-orientation",{"orientation":t})},UnlockOrientation(){this._PostToDOMMaybeSync("unlock-orientation")},LoadStyleSheet(e){this._runtime.GetAssetManager().LoadStyleSheet(e)},async SetDocumentCSSStyle(e,t,s,n){await this.PostToDOMAsync("set-document-css-style",{"prop":C3.CSSToCamelCase(e),"value":t,"selector":s,"is-all":0!==n})},async GetDocumentCSSStyle(e,t,s){const n=await this.PostToDOMAsync("get-document-css-style",{"prop":e,"selector":t});n["isOk"]&&this._cssStyleMap.set(s.toLowerCase(),n["result"].trim())},SetHash(e){this.PostToDOM("set-hash",{"hash":e})},SetWindowSize(e,t){this.PostToDOM("set-window-size",{"windowWidth":e,"windowHeight":t})},SetWindowPosition(e,t){this.PostToDOM("set-window-position",{"windowX":e,"windowY":t})},async RequestInstall(){const e=await this.PostToDOMAsync("request-install");this._installResult=e["result"],this.Trigger(C3.Plugins.Browser.Cnds.OnInstallResult)},SetWarnOnClose(e){this._SetWarnOnCloseEnabled(e)}}}{const C3=self.C3;C3.Plugins.Browser.Exps={URL(){return this._runtime.IsInWorker()?this._initLocationStr:location.toString()},Protocol(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).protocol:location.protocol},Domain(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).hostname:location.hostname},Port(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).port:location.port},PathName(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).pathname:location.pathname},Hash(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).hash:location.hash},QueryString(){return this._runtime.IsInWorker()?new URL(this._initLocationStr).search:location.search},QueryParam(e){const t=this._runtime.IsInWorker()?new URL(this._initLocationStr).search:location.search,s=RegExp("[?&]"+e+"=([^&]*)").exec(t);return s?decodeURIComponent(s[1].replace(/\+/g," ")):""},Referrer(){return this._referrer},Title(){return this._docTitle},Language:()=>navigator.language,Platform:()=>navigator.platform,UserAgent:()=>navigator.userAgent,ExecJS(jsStr){let result=0;try{result=eval(jsStr)}catch(e){console.error("Error executing JavaScript: ",e)}return"number"==typeof result||"string"==typeof result?result:"boolean"==typeof result&&result?1:0},CSSStyleValue(e){return this._cssStyleMap.get(e)||""},Name:()=>navigator.appName,Version:()=>navigator.appVersion,Product:()=>navigator.product,Vendor:()=>navigator.vendor,BatteryLevel:()=>1,BatteryTimeLeft:()=>1/0,Bandwidth(){const e=navigator["connection"];return e&&(e["downlink"]||e["downlinkMax"]||e["bandwidth"])||1/0},ConnectionType(){const e=navigator["connection"];return e&&e["type"]||"unknown"},DevicePixelRatio:()=>self.devicePixelRatio,ScreenWidth(){return this._screenWidth},ScreenHeight(){return this._screenHeight},WindowInnerWidth(){return this._runtime.GetCanvasManager().GetLastWidth()},WindowInnerHeight(){return this._runtime.GetCanvasManager().GetLastHeight()},WindowOuterWidth(){return this._windowOuterWidth},WindowOuterHeight(){return this._windowOuterWidth},DisplayMode(){return this._runtime.GetCanvasManager().GetCssDisplayMode()},InstallResult(){return this._installResult}}}
 }
 
 // scripts/behaviors/Bullet/c3runtime/runtime.js
@@ -1345,6 +1350,10 @@ self.C3_ExpressionFuncs = [
 		() => "Background",
 		() => 270,
 		() => 1,
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			return () => v0.GetValue();
+		},
 		() => -1920,
 		p => {
 			const n0 = p._GetNode(0);
@@ -1360,10 +1369,6 @@ self.C3_ExpressionFuncs = [
 		() => 6,
 		() => 4,
 		() => 0,
-		p => {
-			const v0 = p._GetNode(0).GetVar();
-			return () => v0.GetValue();
-		},
 		p => {
 			const v0 = p._GetNode(0).GetVar();
 			return () => (v0.GetValue() + 1);
@@ -1400,8 +1405,8 @@ self.C3_ExpressionFuncs = [
 		() => "Legendary",
 		() => "Battle",
 		() => "normal",
+		() => "rare",
 		() => "legend",
-		() => "battle",
 		() => 539,
 		() => 1818,
 		() => 408,
@@ -1434,29 +1439,29 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => (n0.ExpObject() + 30);
 		},
-		() => 110,
-		() => 210,
+		() => 50,
+		() => 100,
+		() => 200,
+		() => 300,
+		() => 400,
 		p => {
 			const n0 = p._GetNode(0);
 			const f1 = p._GetNode(1).GetBoundMethod();
 			const f2 = p._GetNode(2).GetBoundMethod();
 			return () => n0.ExpObject(0, f1(f2(9, 18)));
 		},
-		() => 310,
 		p => {
 			const n0 = p._GetNode(0);
 			const f1 = p._GetNode(1).GetBoundMethod();
 			const f2 = p._GetNode(2).GetBoundMethod();
 			return () => n0.ExpObject(0, f1(f2(19, 28)));
 		},
-		() => 410,
 		p => {
 			const n0 = p._GetNode(0);
 			const f1 = p._GetNode(1).GetBoundMethod();
 			const f2 = p._GetNode(2).GetBoundMethod();
 			return () => n0.ExpObject(0, f1(f2(29, 38)));
 		},
-		() => "rare",
 		p => {
 			const n0 = p._GetNode(0);
 			const f1 = p._GetNode(1).GetBoundMethod();
@@ -1519,7 +1524,7 @@ self.C3_ExpressionFuncs = [
 		},
 		() => 1047,
 		() => "Events body",
-		() => 100,
+		() => 110,
 		() => "Norm ",
 		p => {
 			const n0 = p._GetNode(0);
@@ -1571,10 +1576,7 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => n0.ExpObject(0, 8);
 		},
-		() => 296,
-		() => 784,
 		() => "Съесть",
-		() => 660,
 		() => "Приготовить",
 		() => 138,
 		() => 1678,
@@ -1584,7 +1586,6 @@ self.C3_ExpressionFuncs = [
 		() => 1640,
 		() => "-7%",
 		() => 358,
-		() => 400,
 		() => 636,
 		() => 680,
 		() => "+7%",
@@ -1601,15 +1602,22 @@ self.C3_ExpressionFuncs = [
 		() => 1673,
 		() => "Повернуться к ветру",
 		() => "Прикрыть \nлицо",
+		() => 254,
+		() => 1691,
+		() => 298,
+		() => 1649,
+		() => 74.127643,
+		() => 61.582965,
 		() => "Потереть \nоб камень",
+		() => "-3%",
+		() => "+3",
 		() => "Legend",
 		() => "+5",
 		() => "+15%",
 		() => 15,
 		() => "Сухари",
-		() => 1720,
 		() => "Мясо",
-		() => "Пробить",
+		() => 210,
 		() => "Norm",
 		p => {
 			const n0 = p._GetNode(0);
@@ -1657,8 +1665,26 @@ self.C3_ExpressionFuncs = [
 		() => "Съесть корень",
 		() => "Очистить нити",
 		() => "+10%",
+		() => 747,
+		() => 1684,
+		() => 93.009236,
+		() => 86.52022,
+		() => 784,
+		() => 1644,
 		() => "Порыться",
 		() => "Держаться подальше",
+		() => 72,
+		() => 114,
+		() => 1650,
+		() => 280,
+		() => 1688,
+		() => 320,
+		() => 1648,
+		() => 425,
+		() => 78.538084,
+		() => 73.058683,
+		() => 465,
+		() => 1651,
 		() => "Умыться \nв воде",
 		() => "Попробовать \nна вкус",
 		() => "Legend1",
@@ -1666,8 +1692,6 @@ self.C3_ExpressionFuncs = [
 		() => "+20%",
 		() => 20,
 		() => "+20",
-		() => "Battle2",
-		() => 300,
 		() => "Norm2",
 		p => {
 			const n0 = p._GetNode(0);
@@ -1716,18 +1740,23 @@ self.C3_ExpressionFuncs = [
 		() => "Rare2",
 		() => "Взять золото",
 		() => "Использовать травы",
+		() => 78.421137,
+		() => 72.949895,
+		() => "+8",
 		() => "Забрать",
 		() => "Полюбоваться",
 		() => "Умыться",
 		() => "Напиться",
 		() => "Разбирать породу",
 		() => "Рыть глубже",
+		() => 89.95824,
+		() => 83.682084,
+		() => "+12",
 		() => "Legend2",
 		() => "+30%",
 		() => 30,
-		() => "+12",
 		() => 12,
-		() => "Battle3",
+		() => 410,
 		() => "Norm3",
 		p => {
 			const n0 = p._GetNode(0);
@@ -1777,62 +1806,43 @@ self.C3_ExpressionFuncs = [
 		() => "Исследовать \nминералы",
 		() => "Вгрызаться \nглубже",
 		() => "Собрать что \nдоступно",
+		() => "+30",
 		() => "Осмотреть \nкамни",
 		() => "Legend3",
-		() => "+30",
 		() => "+50",
-		() => 50,
-		() => "Battle4",
-		p => {
-			const v0 = p._GetNode(0).GetVar();
-			return () => (v0.GetValue() - 100);
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const f1 = p._GetNode(1).GetBoundMethod();
-			return () => f0(f1(3, 8));
-		},
-		p => {
-			const v0 = p._GetNode(0).GetVar();
-			return () => and("+", v0.GetValue());
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const f1 = p._GetNode(1).GetBoundMethod();
-			return () => f0(f1(2, 6));
-		},
-		() => 1630,
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			const f1 = p._GetNode(1).GetBoundMethod();
-			return () => f0(f1(1, 4));
-		},
+		() => "Пробить",
+		() => 1530,
+		() => "+ 20",
+		() => "+ 10",
 		p => {
 			const v0 = p._GetNode(0).GetVar();
 			return () => and(v0.GetValue(), " м");
 		},
 		() => "Choice buttons",
 		() => "100 m",
-		() => 1.2,
-		() => 0.7,
-		() => 0.8,
-		() => 418,
-		() => "Продолжить",
-		() => 1.3,
-		() => "-3%",
 		() => "200 m",
-		() => 1700,
 		() => "300 m",
-		() => "+8",
 		() => 8,
 		() => "400 m",
 		() => "100 m2",
-		() => "+3",
+		() => 1.2,
+		() => 0.7,
 		() => "200 m2",
+		() => 2.3,
+		() => 0.8,
 		() => "300 m2",
 		() => "400 m2",
+		() => 1000,
+		() => 10000,
+		() => "Functions",
+		() => 296,
+		() => 660,
+		() => 418,
+		() => "Продолжить",
+		() => 1.7,
 		() => "Rewards",
 		() => 0.5,
+		() => 1.3,
 		() => "Pause",
 		() => "Battle_inside",
 		() => 621,
@@ -1844,7 +1854,6 @@ self.C3_ExpressionFuncs = [
 		() => 222,
 		() => 1811,
 		() => 860,
-		() => 1000,
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
@@ -1996,6 +2005,11 @@ self.C3_ExpressionFuncs = [
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => ("Error: " + f0());
+		},
+		() => "Receving ID",
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("new URLSearchParams(window.location.search).get('id')");
 		},
 		() => 60,
 		p => {
