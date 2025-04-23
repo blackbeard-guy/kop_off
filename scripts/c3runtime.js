@@ -1354,6 +1354,22 @@ self.C3_ExpressionFuncs = [
 			const v0 = p._GetNode(0).GetVar();
 			return () => v0.GetValue();
 		},
+		p => {
+			const n0 = p._GetNode(0);
+			return () => n0.ExpObject();
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const v1 = p._GetNode(1).GetVar();
+			return () => (n0.ExpObject() * v1.GetValue());
+		},
+		p => {
+			const n0 = p._GetNode(0);
+			const n1 = p._GetNode(1);
+			const v2 = p._GetNode(2).GetVar();
+			const v3 = p._GetNode(3).GetVar();
+			return () => C3.lerp(n0.ExpObject(), (n1.ExpObject() * v2.GetValue()), v3.GetValue());
+		},
 		() => -1920,
 		p => {
 			const n0 = p._GetNode(0);
@@ -1418,6 +1434,7 @@ self.C3_ExpressionFuncs = [
 		() => 540,
 		() => 290,
 		() => "Final",
+		() => "Debug",
 		() => 541,
 		() => 1711,
 		() => 1712,
@@ -1439,7 +1456,6 @@ self.C3_ExpressionFuncs = [
 			const n0 = p._GetNode(0);
 			return () => (n0.ExpObject() + 30);
 		},
-		() => 50,
 		() => 100,
 		() => 200,
 		() => 300,
@@ -1513,10 +1529,6 @@ self.C3_ExpressionFuncs = [
 		() => "Раскол в земле – место сокровенных сокровищ и опасностей",
 		() => 902,
 		() => 0.3,
-		p => {
-			const n0 = p._GetNode(0);
-			return () => n0.ExpObject();
-		},
 		() => "health",
 		p => {
 			const n0 = p._GetNode(0);
@@ -1810,6 +1822,7 @@ self.C3_ExpressionFuncs = [
 		() => "Осмотреть \nкамни",
 		() => "Legend3",
 		() => "+50",
+		() => 50,
 		() => "Пробить",
 		() => 1530,
 		() => "+ 20",
@@ -1818,6 +1831,12 @@ self.C3_ExpressionFuncs = [
 			const v0 = p._GetNode(0).GetVar();
 			return () => and(v0.GetValue(), " м");
 		},
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			const v1 = p._GetNode(1).GetVar();
+			return () => (v0.GetValue() / v1.GetValue());
+		},
+		() => 0.04,
 		() => "Choice buttons",
 		() => "100 m",
 		() => "200 m",
@@ -1855,6 +1874,10 @@ self.C3_ExpressionFuncs = [
 		() => 1811,
 		() => 860,
 		p => {
+			const n0 = p._GetNode(0);
+			return () => n0.ExpObject(1);
+		},
+		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			const v1 = p._GetNode(1).GetVar();
 			const f2 = p._GetNode(2).GetBoundMethod();
@@ -1870,15 +1893,28 @@ self.C3_ExpressionFuncs = [
 		() => 1833.947972,
 		() => 787,
 		() => 1828,
-		() => 456,
+		() => 376,
 		() => 1814,
 		p => {
 			const n0 = p._GetNode(0);
 			return () => (n0.ExpObject(1) - 20);
 		},
 		p => {
-			const n0 = p._GetNode(0);
-			return () => n0.ExpObject(1);
+			const v0 = p._GetNode(0).GetVar();
+			const f1 = p._GetNode(1).GetBoundMethod();
+			const v2 = p._GetNode(2).GetVar();
+			const v3 = p._GetNode(3).GetVar();
+			const v4 = p._GetNode(4).GetVar();
+			const v5 = p._GetNode(5).GetVar();
+			const v6 = p._GetNode(6).GetVar();
+			const v7 = p._GetNode(7).GetVar();
+			const f8 = p._GetNode(8).GetBoundMethod();
+			const v9 = p._GetNode(9).GetVar();
+			const v10 = p._GetNode(10).GetVar();
+			const v11 = p._GetNode(11).GetVar();
+			const v12 = p._GetNode(12).GetVar();
+			const v13 = p._GetNode(13).GetVar();
+			return () => and(and((((((v0.GetValue() - f1(((v2.GetValue() / 100) * 10))) + v3.GetValue()) + v4.GetValue()) + v5.GetValue()) + v6.GetValue()), "-"), (((((v7.GetValue() + f8(((v9.GetValue() / 100) * 20))) + v10.GetValue()) + v11.GetValue()) + v12.GetValue()) + v13.GetValue()));
 		},
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
@@ -1888,11 +1924,14 @@ self.C3_ExpressionFuncs = [
 			const v4 = p._GetNode(4).GetVar();
 			const f5 = p._GetNode(5).GetBoundMethod();
 			const v6 = p._GetNode(6).GetVar();
-			const v7 = p._GetNode(7).GetVar();
-			const v8 = p._GetNode(8).GetVar();
-			const v9 = p._GetNode(9).GetVar();
-			const v10 = p._GetNode(10).GetVar();
-			return () => add(add(f0((v1.GetValue() - f2(((v3.GetValue() / 100) * 10))), (v4.GetValue() + f5(((v6.GetValue() / 100) * 20)))), (v7.GetValue() * (v8.GetValue() / 100))), (v9.GetValue() * (v10.GetValue() / 100)));
+			return () => f0((v1.GetValue() - f2(((v3.GetValue() / 100) * 10))), (v4.GetValue() + f5(((v6.GetValue() / 100) * 20))));
+		},
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			const v1 = p._GetNode(1).GetVar();
+			const v2 = p._GetNode(2).GetVar();
+			const v3 = p._GetNode(3).GetVar();
+			return () => (((v0.GetValue() + v1.GetValue()) + v2.GetValue()) + v3.GetValue());
 		},
 		() => 164,
 		() => 382,
@@ -1913,6 +1952,8 @@ self.C3_ExpressionFuncs = [
 		() => 0.1,
 		() => 0.6,
 		() => "Player",
+		() => 1466,
+		() => 309.722561,
 		() => "Inventory",
 		() => 0.2,
 		() => 808,
@@ -1984,32 +2025,50 @@ self.C3_ExpressionFuncs = [
 		},
 		() => "Забрать\nнаграду",
 		() => "Send Data",
-		p => {
-			const v0 = p._GetNode(0).GetVar();
-			const f1 = p._GetNode(1).GetBoundMethod();
-			const v2 = p._GetNode(2).GetVar();
-			return () => ((v0.GetValue() + "?name=") + f1(v2.GetValue()));
-		},
-		p => {
-			const v0 = p._GetNode(0).GetVar();
-			const v1 = p._GetNode(1).GetVar();
-			return () => and((v0.GetValue() + "&score="), v1.GetValue());
-		},
-		() => "senddata",
-		() => "GET",
-		() => 1019,
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => ("Response: " + f0());
-		},
-		p => {
-			const f0 = p._GetNode(0).GetBoundMethod();
-			return () => ("Error: " + f0());
-		},
 		() => "Receving ID",
 		p => {
 			const f0 = p._GetNode(0).GetBoundMethod();
 			return () => f0("new URLSearchParams(window.location.search).get('id')");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("new URLSearchParams(window.location.search).get('mood')");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("new URLSearchParams(window.location.search).get('health')");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("new URLSearchParams(window.location.search).get('hunger')");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			return () => f0("new URLSearchParams(window.location.search).get('purity')");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
+			return () => f0(v1.GetValue(), "%2520", "%20");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
+			return () => f0(v1.GetValue(), "%25", "%");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
+			return () => f0(v1.GetValue(), "%20", " ");
+		},
+		p => {
+			const f0 = p._GetNode(0).GetBoundMethod();
+			const v1 = p._GetNode(1).GetVar();
+			return () => f0(v1.GetValue(), "%", "");
+		},
+		p => {
+			const v0 = p._GetNode(0).GetVar();
+			return () => ("ID: " + v0.GetValue());
 		},
 		() => 60,
 		p => {
