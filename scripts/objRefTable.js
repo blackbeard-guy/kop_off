@@ -19,6 +19,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.TextBox,
 		C3.Plugins.Button,
 		C3.Plugins.Browser,
+		C3.Plugins.Audio,
 		C3.Plugins.System.Cnds.IsGroupActive,
 		C3.Plugins.System.Cnds.EveryTick,
 		C3.Behaviors.Bullet.Acts.SetAngleOfMotion,
@@ -61,6 +62,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.AdvancedRandom.Exps.Weighted,
 		C3.Plugins.System.Acts.SetLayerVisible,
 		C3.Plugins.System.Acts.SetBoolVar,
+		C3.Plugins.Audio.Acts.Play,
 		C3.Plugins.Arr.Cnds.ArrForEach,
 		C3.Plugins.Arr.Exps.At,
 		C3.Plugins.System.Exps.int,
@@ -98,6 +100,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Behaviors.MoveTo.Acts.SetDeceleration,
 		C3.Behaviors.Bullet.Acts.SetEnabled,
 		C3.Plugins.Text.Acts.SetOpacity,
+		C3.Plugins.Audio.Acts.Stop,
 		C3.Plugins.Sprite.Acts.MoveToLayer,
 		C3.Plugins.Sprite.Acts.SetAnim,
 		C3.Plugins.Sprite.Exps.ImagePointX,
@@ -113,15 +116,7 @@ self.C3_GetObjectRefTable = function () {
 		C3.Plugins.Browser.Exps.ExecJS,
 		C3.ScriptsInEvents.EventSheet1_Event416_Act6,
 		C3.Plugins.System.Exps.replace,
-		C3.Plugins.System.Cnds.LayerVisible,
-		C3.Plugins.System.Acts.SetTimescale,
-		C3.Plugins.TiledBg.Acts.SetWidth,
-		C3.Plugins.TiledBg.Exps.Width,
-		C3.Plugins.System.Exps.dt,
-		C3.Plugins.System.Exps.min,
-		C3.Plugins.System.Exps.max,
-		C3.Plugins.System.Acts.GoToLayout,
-		C3.Plugins.Sprite.Cnds.OnAnyAnimFinished
+		C3.Plugins.System.Cnds.LayerVisible
 	];
 };
 self.C3_JsPropNameTable = [
@@ -253,6 +248,8 @@ self.C3_JsPropNameTable = [
 	{Progress_bar_frame: 0},
 	{progress_bar_fill: 0},
 	{progress_bar_milestones: 0},
+	{Debug: 0},
+	{Audio: 0},
 	{tunnel: 0},
 	{rocks: 0},
 	{JunkFam: 0},
@@ -425,6 +422,8 @@ self.InstanceType = {
 	Progress_bar_frame: class extends self.ISpriteInstance {},
 	progress_bar_fill: class extends self.ISpriteInstance {},
 	progress_bar_milestones: class extends self.ISpriteInstance {},
+	Debug: class extends self.ITextInstance {},
+	Audio: class extends self.IInstance {},
 	tunnel: class extends self.ISpriteInstance {},
 	rocks: class extends self.ISpriteInstance {},
 	JunkFam: class extends self.ISpriteInstance {},

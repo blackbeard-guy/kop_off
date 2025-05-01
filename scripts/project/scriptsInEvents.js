@@ -2,22 +2,6 @@
 
 const scriptsInEvents = {
 
-	async EventSheet1_Event416_Act6(runtime, localVars)
-	{
-		const params = new URLSearchParams(window.location.search);
-		let rawName = params.get("name");
-		if (rawName) {
-		    try {
-		        rawName = decodeURIComponent(rawName);
-		    } catch (e) {
-		        // fallback if decodeURIComponent fails
-		        console.warn("Could not decode name, using raw value instead.");
-		    }
-		    runtime.globalVars.name = rawName;
-		}
-		
-	},
-
 	async EventSheet1_Event410_Act4(runtime, localVars)
 	{
 		fetch('https://adventure-87327.bubbleapps.io/api/1.1/wf/collect_the_reward', {
@@ -38,6 +22,22 @@ const scriptsInEvents = {
 		.catch(error => {
 		  console.error('Error:', error);
 		});
+	},
+
+	async EventSheet1_Event416_Act6(runtime, localVars)
+	{
+		const params = new URLSearchParams(window.location.search);
+		let rawName = params.get("name");
+		if (rawName) {
+		    try {
+		        rawName = decodeURIComponent(rawName);
+		    } catch (e) {
+		        // fallback if decodeURIComponent fails
+		        console.warn("Could not decode name, using raw value instead.");
+		    }
+		    runtime.globalVars.name = rawName;
+		}
+		
 	}
 };
 
